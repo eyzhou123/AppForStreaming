@@ -105,14 +105,11 @@ public class BufferManager extends Thread {
     				////bufferedImage.setPixels(rgbArray, 0, mWidth, 0, 0, mWidth, mHeight);
     				
     				
-    				//bufferedImage = BitmapFactory.decodeByteArray(data , 0, data.length);
-    				
     				BitmapFactory.Options opt = new BitmapFactory.Options();
+    				opt.inPurgeable = true;
     				opt.inDither = true;
     				opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
     				Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, opt);
-    				
-    				
     				
                     mListener.onDirty(bitmap);
                     System.out.println("time cost = " + (System.currentTimeMillis() - t));

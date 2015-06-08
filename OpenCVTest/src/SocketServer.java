@@ -12,6 +12,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
@@ -59,12 +60,12 @@ public class SocketServer extends Thread {
 
 				inputStream = new BufferedInputStream(socket.getInputStream());
 				outputStream = new BufferedOutputStream(socket.getOutputStream());
-//640 x 480
-// greyscale?
-				canvas.setCanvasSize(600, 480);
+
+				//canvas.setCanvasSize(600, 480);
 				FrameGrabber grabber = new OpenCVFrameGrabber(0);
-				grabber.setImageWidth(160);
-				grabber.setImageHeight(500);
+				// minimum: 640x480 ?
+				grabber.setImageWidth(320);
+				grabber.setImageHeight(480);
 				int i=0;
 				int frame_length = 0;
 				try {
@@ -101,6 +102,7 @@ public class SocketServer extends Thread {
 				jsonObj.addProperty("width", grabber.getImageWidth());
 				jsonObj.addProperty("height", grabber.getImageHeight());
 
+				// send jsonObj first
 				outputStream.write(jsonObj.toString().getBytes());
 				outputStream.flush();
 
@@ -145,18 +147,14 @@ public class SocketServer extends Thread {
 									buff_img = img.getBufferedImage();
 
 									ByteArrayOutputStream baos = new ByteArrayOutputStream();
-									ImageIO.write(buff_img, "bmp", baos);
+									ImageIO.write(buff_img, "jpg", baos);
 									byte[] bytes = baos.toByteArray();
 //									
-//									byte[] bytes_with_length = Arrays.copyOf(bytes, bytes.length + 1); //create new array from old array and allocate one more element
-//								    bytes_with_length[bytes_with_length.length - 1] = intToBytes(bytes.length);
+									//System.out.println("bytes length: " + bytes.length);
 									
-									System.out.println("bytes length: " + bytes.length);
-
-									//byte[] bytes = ((DataBufferByte) img.getBufferedImage().getData().getDataBuffer()).getData();
-
-
-									outputStream.write(bytes);
+								
+									outputStream.write(intToBytes(bytes.length));
+									outputStream.write(bytes); 
 									outputStream.flush();
 
 									if (Thread.currentThread().isInterrupted())
@@ -184,11 +182,13 @@ public class SocketServer extends Thread {
 			}
 
 		} catch (IOException e) {
+			System.out.println("exception");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
 				if (outputStream != null) {
+					System.out.println("closed");
 					outputStream.close();
 					outputStream = null;
 				}
@@ -215,22 +215,26 @@ public class SocketServer extends Thread {
 
 	}
 	
-	public byte[] intToBytes(int my_int) throws IOException {
-	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	    ObjectOutput out = new ObjectOutputStream(bos);
-	    out.writeInt(my_int);
-	    out.close();
-	    byte[] int_bytes = bos.toByteArray();
-	    bos.close();
-	    return int_bytes;
+	public static byte[] intToBytes(int yourInt) throws IOException {
+		return ByteBuffer.allocate(4).putInt(yourInt).array();
 	}
-	public int bytesToInt(byte[] int_bytes) throws IOException {
-	    ByteArrayInputStream bis = new ByteArrayInputStream(int_bytes);
-	    ObjectInputStream ois = new ObjectInputStream(bis);
-	    int my_int = ois.readInt();
-	    ois.close();
-	    return my_int;
-	}
+	
+//	public byte[] intToBytes(int my_int) throws IOException {
+//	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//	    ObjectOutput out = new ObjectOutputStream(bos);
+//	    out.writeInt(my_int);
+//	    out.close();
+//	    byte[] int_bytes = bos.toByteArray();
+//	    bos.close();
+//	    return int_bytes;
+//	}
+//	public int bytesToInt(byte[] int_bytes) throws IOException {
+//	    ByteArrayInputStream bis = new ByteArrayInputStream(int_bytes);
+//	    ObjectInputStream ois = new ObjectInputStream(bis);
+//	    int my_int = ois.readInt();
+//	    ois.close();
+//	    return my_int;
+//	}
 
 
 }
