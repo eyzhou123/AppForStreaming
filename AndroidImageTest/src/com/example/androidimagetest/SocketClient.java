@@ -37,23 +37,11 @@ public class SocketClient extends Thread {
 	private BufferManager mBufferManager;
 	private static final String TAG = "socket";
 	//private String mIP = "10.0.0.8";
-	private String mIP = "128.237.223.104";
-	private boolean read_new_length = false;
+	//private String mIP = "128.237.223.104";
+	private String mIP = "128.237.218.26";
 	int width;
 	int height;
 	private int mPort = 8888;
-	
-//	public SocketClient(CameraPreview preview, String ip, int port) {
-//	    mCameraPreview = preview;
-//	    mIP = ip;
-//	    mPort = port;
-//		start();
-//	}
-//	
-//	public SocketClient(CameraPreview preview) {
-//	    mCameraPreview = preview;
-//		start();
-//	}
 	
 	@Override
 	public void run() {
@@ -63,6 +51,7 @@ public class SocketClient extends Thread {
 		try {
 			ByteArrayOutputStream byteArray = null;
 			mSocket = new Socket();
+			Log.d("ERRORCHECK", "creating socket");
 			mSocket.connect(new InetSocketAddress(mIP, mPort), 0); // hard-code server address
 			BufferedOutputStream outputStream = new BufferedOutputStream(mSocket.getOutputStream());
 			BufferedInputStream inputStream = new BufferedInputStream(mSocket.getInputStream());
@@ -184,22 +173,6 @@ public class SocketClient extends Thread {
 		return ByteBuffer.wrap(int_bytes).getInt();
 	}
 	
-//	public byte[] intToBytes(int my_int) throws IOException {
-//	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//	    ObjectOutput out = new ObjectOutputStream(bos);
-//	    out.writeInt(my_int);
-//	    out.close();
-//	    byte[] int_bytes = bos.toByteArray();
-//	    bos.close();
-//	    return int_bytes;
-//	}
-//	public int bytesToInt(byte[] int_bytes) throws IOException {
-//	    ByteArrayInputStream bis = new ByteArrayInputStream(int_bytes);
-//	    ObjectInputStream ois = new ObjectInputStream(bis);
-//	    int my_int = ois.readInt();
-//	    ois.close();
-//	    return my_int;
-//	}
 	
 	public void close() {
 		if (mSocket != null) {

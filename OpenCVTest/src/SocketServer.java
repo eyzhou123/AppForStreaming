@@ -1,5 +1,4 @@
 
-
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.BufferedInputStream;
@@ -61,17 +60,17 @@ public class SocketServer extends Thread {
 				inputStream = new BufferedInputStream(socket.getInputStream());
 				outputStream = new BufferedOutputStream(socket.getOutputStream());
 
-				//canvas.setCanvasSize(600, 480);
+				canvas.setCanvasSize(500, 480);
 				FrameGrabber grabber = new OpenCVFrameGrabber(0);
 				// minimum: 640x480 ?
 				grabber.setImageWidth(320);
-				grabber.setImageHeight(480);
+				grabber.setImageHeight(500);
 				int i=0;
 				int frame_length = 0;
 				try {
 					grabber.start();
 				} catch (Exception e) {
-					System.out.println("EXCEEEPTTIOOON");
+					System.out.println("exception from starting grabber");
 				}
 				IplImage initial_frame = null;
 				while(frame_length == 0) {
@@ -134,7 +133,8 @@ public class SocketServer extends Thread {
 							BufferedImage buff_img = null;
 
 							// send data
-
+							// use compressed JPG format for speed
+							// need to send the byte size first (changes every time)
 							while (true) {
 								try {
 									img = grabber.grab();
@@ -152,7 +152,6 @@ public class SocketServer extends Thread {
 //									
 									//System.out.println("bytes length: " + bytes.length);
 									
-								
 									outputStream.write(intToBytes(bytes.length));
 									outputStream.write(bytes); 
 									outputStream.flush();
@@ -218,23 +217,6 @@ public class SocketServer extends Thread {
 	public static byte[] intToBytes(int yourInt) throws IOException {
 		return ByteBuffer.allocate(4).putInt(yourInt).array();
 	}
-	
-//	public byte[] intToBytes(int my_int) throws IOException {
-//	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//	    ObjectOutput out = new ObjectOutputStream(bos);
-//	    out.writeInt(my_int);
-//	    out.close();
-//	    byte[] int_bytes = bos.toByteArray();
-//	    bos.close();
-//	    return int_bytes;
-//	}
-//	public int bytesToInt(byte[] int_bytes) throws IOException {
-//	    ByteArrayInputStream bis = new ByteArrayInputStream(int_bytes);
-//	    ObjectInputStream ois = new ObjectInputStream(bis);
-//	    int my_int = ois.readInt();
-//	    ois.close();
-//	    return my_int;
-//	}
 
 
 }
