@@ -1,0 +1,6 @@
+{
+	"SS_URL":"http://inmind-yql.v1.production.manhattan.bf1.yahoo.com",
+	"I13N_URL":"http://blondbeyond.corp.ne1.yahoo.com:4080/i13n",
+	"LOGIN_URL":"http://blondbeyond.corp.ne1.yahoo.com:4080/login",
+	"UUIDTRACKER_URL":"http://blondbeyond.corp.ne1.yahoo.com:4080/ut"
+}

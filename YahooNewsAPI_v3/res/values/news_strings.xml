@@ -1,0 +1,46 @@
+<!--
+  Copyright 2013 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+
+<resources>
+    <string name="app_name">Reader</string>
+    
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_switchview">Switch View</string>
+    <string name="action_settings">Settings</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="login">login</string>
+    <string name="logout">logout</string>
+    <string name="not_connected">Network is not connected. Please try again later.</string>
+    <string name="i13n_settings">Instrumentation Settings</string>
+    <string name="i13n_title">Enable Instrumentation</string>
+    <string name="i13n_summary">Allow sending logs to the InMind server to improve usage experiences.</string>
+    <string name="trackLocation_title">Enable Location Tracker</string>
+    <string name="trackLocation_summary">Allow sending location information to the InMind server to improve usage experiences.</string>
+    <string name="trackLocEnabled">trackLocEnabled</string>
+    <string name="i13nEnabled">i13nEnabled</string>
+    <string name="send_to">Send to</string>
+    <string name="graphical_settings">Graphical Settings</string>
+    <string name="flipViewEnabled">flipViewEnabled</string>
+    <string name="flipViewEnabled_title">Enable FlipView</string>
+    <string name="flipViewEnabled_summary">Allow swithcing between ListView and FlipView. FlipView is implemented with the aphidmobile library, and may be susceptible to memory leak when GC is not triggered in a long time.</string>
+	
+    <string name="news_view">News View</string>
+    <string name="assistant_view">Assistant View</string>
+    <string name="both_view">Both View</string>
+    <string name="woz_view">WoZ View</string>
+    <string name="image_view_title">Image View</string>
+</resources>

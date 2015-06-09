@@ -60,11 +60,11 @@ public class SocketServer extends Thread {
 				inputStream = new BufferedInputStream(socket.getInputStream());
 				outputStream = new BufferedOutputStream(socket.getOutputStream());
 
-				canvas.setCanvasSize(500, 480);
+				canvas.setCanvasSize(600, 480);
 				FrameGrabber grabber = new OpenCVFrameGrabber(0);
 				// minimum: 640x480 ?
 				grabber.setImageWidth(320);
-				grabber.setImageHeight(500);
+				grabber.setImageHeight(700);
 				int i=0;
 				int frame_length = 0;
 				try {
