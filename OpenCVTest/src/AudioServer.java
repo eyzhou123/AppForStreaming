@@ -66,7 +66,7 @@ public class AudioServer extends Thread {
 				inputStream = new BufferedInputStream(socket.getInputStream());
 				outputStream = new BufferedOutputStream(socket.getOutputStream());
 
-//////////////				
+			
 				AudioFormat format = new AudioFormat(8000.0f, 16, 1, true, false);
 			    TargetDataLine microphone;
 			    SourceDataLine speakers;
@@ -102,8 +102,6 @@ public class AudioServer extends Thread {
 							System.out.println("thread interrupted");
 							break;
 						}
-			            //out.write(data, 0, numBytesRead); 
-						
 			            // Write data to speakers stream for immediate play-back
 			            speakers.write(data, 0, numBytesRead);
 			        }
@@ -113,87 +111,6 @@ public class AudioServer extends Thread {
 			    } catch (LineUnavailableException e) {
 			        e.printStackTrace();
 			    } 
-/////////////////
-//
-//				JsonObject jsonObj = new JsonObject();
-//				jsonObj.addProperty("type", "data");
-//				jsonObj.addProperty("length", frame_length);
-//				jsonObj.addProperty("width", grabber.getImageWidth());
-//				jsonObj.addProperty("height", grabber.getImageHeight());
-//
-//				// send jsonObj first
-//				outputStream.write(jsonObj.toString().getBytes());
-//				outputStream.flush();
-//
-//				byte[] buff = new byte[256];
-//				int len = 0;
-//				String msg = null;
-//
-//				while ((len = inputStream.read(buff)) != -1) {
-//					msg = new String(buff, 0, len);
-//
-//					// JSON analysis
-//					JsonParser parser = new JsonParser();
-//					boolean isJSON = true;
-//					JsonElement element = null;
-//					try {
-//						element =  parser.parse(msg);
-//					}
-//					catch (JsonParseException e) {
-//						//Log.e(TAG, "exception: " + e);
-//						isJSON = false;
-//					}
-//					if (isJSON && element != null) {
-//						JsonObject obj = element.getAsJsonObject();
-//						element = obj.get("state");
-//						if (element != null && element.getAsString().equals("ok")) {
-//
-//
-//							IplImage img = null;
-//							BufferedImage buff_img = null;
-//
-//							// send data
-//							// use compressed JPG format for speed
-//							// need to send the byte size first (changes every time)
-//							while (true) {
-//								try {
-//									img = grabber.grab();
-//								} catch (Exception e) {
-//									// TODO Auto-generated catch block
-//									e.printStackTrace();
-//								}
-//								if (img != null) {
-//									canvas.showImage(img);
-//									buff_img = img.getBufferedImage();
-//
-//									ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//									ImageIO.write(buff_img, "jpg", baos);
-//									byte[] bytes = baos.toByteArray();
-////									
-//									//System.out.println("bytes length: " + bytes.length);
-//									
-//									outputStream.write(intToBytes(bytes.length));
-//									outputStream.write(bytes); 
-//									outputStream.flush();
-//
-//									if (Thread.currentThread().isInterrupted())
-//									{
-//										System.out.println("??");
-//										break;
-//									}
-//								}
-//								else {
-//									System.out.println(":(");
-//								}
-//							}
-//
-//							break;
-//						}
-//					}
-//					else {
-//						break;
-//					}
-//				}
 
 				outputStream.close();
 				inputStream.close();
