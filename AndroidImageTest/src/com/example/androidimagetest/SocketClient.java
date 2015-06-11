@@ -4,6 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
@@ -21,6 +24,7 @@ import java.nio.ByteBuffer;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.google.gson.JsonElement;
@@ -51,7 +55,7 @@ public class SocketClient extends Thread {
 		try {
 			ByteArrayOutputStream byteArray = null;
 			mSocket = new Socket();
-			Log.d("ERRORCHECK", "creating socket");
+			Log.d("ERRORCHECK", "creating video socket");
 			mSocket.connect(new InetSocketAddress(mIP, mPort), 0); // hard-code server address
 			BufferedOutputStream outputStream = new BufferedOutputStream(mSocket.getOutputStream());
 			BufferedInputStream inputStream = new BufferedInputStream(mSocket.getInputStream());
@@ -111,8 +115,7 @@ public class SocketClient extends Thread {
 				outputStream.write(jsonObj.toString().getBytes());
 				outputStream.flush();
 				// read image data
-				
-			
+
 				while(true) {
 					//read image buffer length
 					int length_bytes_read = 0;

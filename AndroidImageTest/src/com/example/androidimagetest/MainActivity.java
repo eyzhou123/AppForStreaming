@@ -1,5 +1,6 @@
 package com.example.androidimagetest;
 
+import java.io.File;
 import java.util.LinkedList;
 
 import android.app.Activity;
@@ -19,19 +20,29 @@ public class MainActivity extends Activity implements DataListener {
 	
 	private ImageView mImageView;
 	private Handler handler;
+	
+	public static File cache_dir;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);  
 	    setContentView(R.layout.surface_layout);
+	    
 	    SocketClient socketclient = new SocketClient();
 	    socketclient.setOnDataListener(this);
+	    
+	    AudioClient audioclient = new AudioClient();
+	    
+	    
+	    
+	    cache_dir = getCacheDir();
 	   
 	    handler = new Handler();
 	    
 	    mImageView = (ImageView) findViewById(R.id.image_view);
 	    
 	    socketclient.start();
+	    audioclient.start();
 	    
 	}
 

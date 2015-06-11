@@ -15,6 +15,12 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.TargetDataLine;
 import javax.swing.JFrame;
 
 import com.google.gson.JsonElement;
@@ -90,7 +96,7 @@ public class SocketServer extends Thread {
 
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						//e1.printStackTrace();
 					}
 				}
 
@@ -140,7 +146,7 @@ public class SocketServer extends Thread {
 									img = grabber.grab();
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
-									e.printStackTrace();
+									//e.printStackTrace();
 								}
 								if (img != null) {
 									canvas.showImage(img);
