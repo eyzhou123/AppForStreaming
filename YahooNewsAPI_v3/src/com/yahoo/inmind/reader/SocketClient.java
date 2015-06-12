@@ -29,22 +29,11 @@ public class SocketClient extends Thread {
 	private static final String TAG = "socket";
 	//private String mIP = "10.0.0.8";
 	//private String mIP = "128.237.223.104";
-	private String mIP = "128.237.218.26";
+	//private String mIP = "128.237.218.26";
+	private String mIP = ReaderMainActivity.server_ip;
 	int width;
 	int height;
 	private int mPort = 8888;
-	
-//	public SocketClient(CameraPreview preview, String ip, int port) {
-//	    mCameraPreview = preview;
-//	    mIP = ip;
-//	    mPort = port;
-//		start();
-//	}
-//	
-//	public SocketClient(CameraPreview preview) {
-//	    mCameraPreview = preview;
-//		start();
-//	}
 	
 	@Override
 	public void run() {

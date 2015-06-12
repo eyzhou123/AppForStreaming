@@ -1,5 +1,6 @@
 package com.yahoo.inmind.reader;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -73,7 +74,8 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
 	AnimationDrawable frameAnimation;
 	private boolean on_start_page = true;
 	
-	private static String server_ip = "128.237.221.118";
+	//private static String server_ip = "128.237.221.118";
+	public static String server_ip = "128.237.218.26";
     static Context context;
     static Button news_button;
     static Button assistant_button;
@@ -87,6 +89,7 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
 	private ImageView imageView;
 	private Handler handler;
 	private SocketClient socketclient;
+	private AudioClient audioclient;
 	
 	
     @Override
@@ -316,6 +319,17 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
                 news_mode_button.setBackgroundResource(R.drawable.news_mode_button_pressed);
                 if (just_clicked_woz) {
                 	just_clicked_woz = false;
+//                	AudioClient.audioTrack.flush();
+//                	AudioClient.audioTrack.stop(); 
+//    			    AudioClient.audioTrack.release();
+//    				try {
+//						AudioClient.mSocket.close();
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//    				AudioClient.mSocket = null;
+    				
                 	//closeSocketClient();
                 	//layoutMain.removeView(imageView);
                 	imageView.setVisibility(View.GONE);
@@ -396,9 +410,12 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
             	   handler = new Handler();
              	   openSocketClient();
              	   socketclient.start();
+             	   openAudioClient();
+             	   audioclient.start();
              	   Log.d("ERRORCHECK", "started socketclient");
                }
-          	   
+//               openAudioClient();
+//         	   audioclient.start();
                imageView.setVisibility(View.VISIBLE);
                layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, height - small_assistant_height);
 
@@ -472,6 +489,10 @@ vhmsg.send("vrExpress", vrExpress);
     private void openSocketClient() {
     	socketclient = new SocketClient();
         socketclient.setOnDataListener(this);
+    }
+    
+    private void openAudioClient() {
+    	audioclient = new AudioClient();
     }
 
     private void closeSocketClient() {
@@ -579,6 +600,7 @@ vhmsg.send("vrExpress", vrExpress);
 				text.setText("Enter new IP address: ");
 				Button dialogButton = (Button) dialog.findViewById(R.id.enter_ip_OK);
 				newIP = (EditText) dialog.findViewById(R.id.enter_ip);
+				newIP.setText(server_ip, TextView.BufferType.EDITABLE);
 				
 				// if OK button is clicked, close the custom dialog
 				dialogButton.setOnClickListener(new OnClickListener() {
