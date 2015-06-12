@@ -45,8 +45,9 @@ public class AudioClient extends Thread {
 	int width;
 	int height;
 	private int mPort = 8080;
-	AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100, 
-			AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, 1024, 
+	int minSize = 1024;
+	AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 8000, 
+			AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, minSize, 
 			AudioTrack.MODE_STREAM);
 	
 	
@@ -102,7 +103,7 @@ public class AudioClient extends Thread {
 					Log.d("ERRORCHECK", "read: " + just_read + "bytes");
 					try {
 						Log.d("ERRORCHECK", "audio_data.length = " + audio_data.length);
-						audioTrack.write(audio_data, 0, 1024);
+						audioTrack.write(audio_data, 0, minSize);
 						
 					} catch(Throwable t){
 				        Log.d("ERRORCHECK","Audiotrack write failed");

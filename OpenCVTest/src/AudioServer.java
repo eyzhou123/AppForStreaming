@@ -80,7 +80,7 @@ public class AudioServer extends Thread {
 			        ByteArrayOutputStream out = new ByteArrayOutputStream();
 			        int numBytesRead;
 			        int CHUNK_SIZE = 1024;
-			        byte[] data = new byte[microphone.getBufferSize() / 5];
+			        byte[] data = new byte[microphone.getBufferSize()];
 			        microphone.start();
 
 			        int bytesRead = 0;
