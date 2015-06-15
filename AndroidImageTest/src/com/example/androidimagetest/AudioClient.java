@@ -40,8 +40,8 @@ public class AudioClient extends Thread {
 	private BufferManager mBufferManager;
 	private static final String TAG = "socket";
 	//private String mIP = "10.0.0.8";
-	//private String mIP = "128.237.223.104";
-	private String mIP = "128.237.218.26";
+	private String mIP = "128.237.223.104";
+	//private String mIP = "128.237.218.26";
 	int width;
 	int height;
 	private int mPort = 8080;
@@ -59,6 +59,7 @@ public class AudioClient extends Thread {
 		try {
 			ByteArrayOutputStream byteArray = null;
 			mSocket = new Socket();
+			
 			Log.d("ERRORCHECK", "creating audio socket");
 			mSocket.connect(new InetSocketAddress(mIP, mPort), 0); // hard-code server address
 			BufferedOutputStream outputStream = new BufferedOutputStream(mSocket.getOutputStream());
@@ -86,7 +87,7 @@ public class AudioClient extends Thread {
 			}
 			
 			while(true) {
-				//read image buffer length
+				//read audio buffer length (UNNECESSARY)
 				int length_bytes_read = 0;
 				int just_read;
 				while (length_bytes_read < 4) {
@@ -96,13 +97,15 @@ public class AudioClient extends Thread {
 				int updated_length = bytesToInt(length_buff);
 				audio_data = new byte[updated_length];
 				//Log.d("ERRORCHECK", "will read: " + updated_length + "bytes");
+				
+				// read audio bytes into audio_data buffer
 				int audio_bytes_read = 0;
 				while (audio_bytes_read < updated_length) {
 					just_read = inputStream.read(audio_data, audio_bytes_read, updated_length - audio_bytes_read);
 					audio_bytes_read += just_read;
-					Log.d("ERRORCHECK", "read: " + just_read + "bytes");
+					//Log.d("ERRORCHECK", "read: " + just_read + "bytes");
 					try {
-						Log.d("ERRORCHECK", "audio_data.length = " + audio_data.length);
+						//Log.d("ERRORCHECK", "audio_data.length = " + audio_data.length);
 						audioTrack.write(audio_data, 0, minSize);
 						
 					} catch(Throwable t){
@@ -140,6 +143,7 @@ public class AudioClient extends Thread {
 		if (mSocket != null) {
 			try {
 				mSocket.close();
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

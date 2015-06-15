@@ -54,6 +54,12 @@ public class AudioServer extends Thread {
 		ByteArrayOutputStream byteArray = null;
 		try {
 			mServer = new ServerSocket(8080);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		while(true) {
+		try {
 			while (true) {
 				if (byteArray != null)
 					byteArray.reset();
@@ -121,33 +127,34 @@ public class AudioServer extends Thread {
 			System.out.println("exception");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			try {
-				if (outputStream != null) {
-					System.out.println("closed");
-					outputStream.close();
-					outputStream = null;
-				}
-
-				if (inputStream != null) {
-					inputStream.close();
-					inputStream = null;
-				}
-
-				if (socket != null) {
-					socket.close();
-					socket = null;
-				}
-
-				if (byteArray != null) {
-					byteArray.close();
-				}
-
-			} catch (IOException e) {
-
-			}
+//		} finally {
+//			try {
+//				if (outputStream != null) {
+//					System.out.println("closed");
+//					outputStream.close();
+//					outputStream = null;
+//				}
+//
+//				if (inputStream != null) {
+//					inputStream.close();
+//					inputStream = null;
+//				}
+//
+//				if (socket != null) {
+//					socket.close();
+//					socket = null;
+//				}
+//
+//				if (byteArray != null) {
+//					byteArray.close();
+//				}
+//
+//			} catch (IOException e) {
+//
+//			}
 
 		}
+	}
 
 	}
 	
