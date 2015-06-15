@@ -66,12 +66,12 @@ public class AsyncSource<T> extends ProfiledSource {
 		
 	    protected T doInBackground(T... objs) {	      
 	        T item = objs[0];
-        	if (loadItemInParallel(item) && !loadAsyncCancelling){
-        		Message msg = new Message();
-        		msg.what = msgWhat;
-        		msg.obj = item;
-        		uiHandler.get().sendMessage(msg); //Send msg to notify UI to update       	
-        	}
+//        	if (loadItemInParallel(item) && !loadAsyncCancelling){
+//        		Message msg = new Message();
+//        		msg.what = msgWhat;
+//        		msg.obj = item;
+//        		uiHandler.get().sendMessage(msg); //Send msg to notify UI to update       	
+//        	}
 	    	return null;
 	    }	    
 	}

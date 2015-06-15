@@ -75,7 +75,9 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
 	private boolean on_start_page = true;
 	
 	//private static String server_ip = "128.237.221.118";
-	public static String server_ip = "128.237.218.26";
+	//public static String server_ip = "128.237.218.26";
+	public static String server_ip = "128.237.223.104";
+	
     static Context context;
     static Button news_button;
     static Button assistant_button;
@@ -246,11 +248,12 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
             public void onClick(View v) {
                 assistant_button_clicked = true;
                 assistant_button.setBackgroundResource(R.drawable.assistant_button_pressed);
-                if (just_clicked_woz) {
-                	just_clicked_woz = false;
-                	//closeSocketClient();
-                	//layoutMain.removeView(imageView);
-                	imageView.setVisibility(View.GONE);
+                if (stream_button_clicked) {
+                	stream_button_clicked = false;
+//                	just_clicked_woz = false;
+                	closeSocketClient();
+                	layoutMain.removeView(imageView);
+//                	imageView.setVisibility(View.GONE);
                 	layoutMain.removeView(layoutLeft);
                 	layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, news_height );
                     layoutMain.addView(layoutRight,DrawerLayout.LayoutParams.MATCH_PARENT, assistant_height);
@@ -281,11 +284,12 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
             public void onClick(View v) {
                 news_button_clicked = true;
                 news_button.setBackgroundResource(R.drawable.news_button_pressed);
-                if (just_clicked_woz) {
-                	just_clicked_woz = false;
-                	//closeSocketClient();
-                	//layoutMain.removeView(imageView);
-                	imageView.setVisibility(View.GONE);
+                if (stream_button_clicked) {
+                	stream_button_clicked = false;
+//                	just_clicked_woz = false;
+                	closeSocketClient();
+                	layoutMain.removeView(imageView);
+//                	imageView.setVisibility(View.GONE);
                 	layoutMain.removeView(layoutLeft);
                 	layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, news_height );
                     layoutMain.addView(layoutRight,DrawerLayout.LayoutParams.MATCH_PARENT, assistant_height);
@@ -317,22 +321,13 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
             public void onClick(View v) {
                 news_mode_clicked = true;
                 news_mode_button.setBackgroundResource(R.drawable.news_mode_button_pressed);
-                if (just_clicked_woz) {
-                	just_clicked_woz = false;
-//                	AudioClient.audioTrack.flush();
-//                	AudioClient.audioTrack.stop(); 
-//    			    AudioClient.audioTrack.release();
-//    				try {
-//						AudioClient.mSocket.close();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//    				AudioClient.mSocket = null;
-    				
-                	//closeSocketClient();
-                	//layoutMain.removeView(imageView);
-                	imageView.setVisibility(View.GONE);
+                if (stream_button_clicked) {
+//                	just_clicked_woz = false;
+                	
+    				stream_button_clicked = false;
+                	closeSocketClient();
+                	layoutMain.removeView(imageView);
+//                	imageView.setVisibility(View.GONE);
                 	layoutMain.removeView(layoutLeft);
                 	layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, news_height );
                     layoutMain.addView(layoutRight,DrawerLayout.LayoutParams.MATCH_PARENT, assistant_height);
@@ -368,9 +363,10 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
         
         stream_button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-            	just_clicked_woz = true;
+//            	just_clicked_woz = true;
                 //news_mode_button.setBackgroundResource(R.drawable.news_mode_button_pressed);
-            	if (just_clicked_woz) {
+            	if (stream_button_clicked) {
+            		layoutMain.removeView(imageView);
             		layoutMain.removeView(layoutLeft);
             	}
                 if (assistant_button_clicked) {
@@ -404,7 +400,7 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
                 LinearLayout.LayoutParams image_params = new LinearLayout.LayoutParams(
                 		LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 
-               if (!stream_button_clicked) {
+//               if (!stream_button_clicked) {
             	   stream_button_clicked = true;
             	   layoutMain.addView(imageView, image_params);
             	   handler = new Handler();
@@ -412,11 +408,11 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
              	   socketclient.start();
              	   openAudioClient();
              	   audioclient.start();
-             	   Log.d("ERRORCHECK", "started socketclient");
-               }
+             	   Log.d("ERRORCHECK", "started clients");
+//               }
 //               openAudioClient();
 //         	   audioclient.start();
-               imageView.setVisibility(View.VISIBLE);
+//               imageView.setVisibility(View.VISIBLE);
                layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, height - small_assistant_height);
 
             }
@@ -496,18 +492,17 @@ vhmsg.send("vrExpress", vrExpress);
     }
 
     private void closeSocketClient() {
-//		if (socketclient == null)
-//			return;
-//		
-//		socketclient.interrupt();
-//        try {
-//        	socketclient.join();
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//        socketclient = null;
-    	socketclient.close();
+//    	AudioClient.audioTrack.flush();
+//    	AudioClient.audioTrack.stop(); 
+//	    AudioClient.audioTrack.release();
+    	
+	    audioclient.close();
+	    socketclient.close();
+//	    audioclient = null;
+//	    socketclient = null;
+//	    audioclient = null;
+//	    socketclient = null;
+		
 	}
     
     private void paint() {
@@ -541,7 +536,7 @@ vhmsg.send("vrExpress", vrExpress);
         	}
 			mQueue.add(bufferedImage);
 		}
-		Log.d("ERRORCHECK", "onDirty called");
+//		Log.d("ERRORCHECK", "onDirty called");
 		paint();
 	}
     

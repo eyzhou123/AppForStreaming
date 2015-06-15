@@ -30,7 +30,7 @@ public class SocketClient extends Thread {
 	//private String mIP = "10.0.0.8";
 	//private String mIP = "128.237.223.104";
 	//private String mIP = "128.237.218.26";
-	private String mIP = ReaderMainActivity.server_ip;
+	private String mIp = ReaderMainActivity.server_ip;
 	int width;
 	int height;
 	private int mPort = 8888;
@@ -43,8 +43,8 @@ public class SocketClient extends Thread {
 		try {
 			ByteArrayOutputStream byteArray = null;
 			mSocket = new Socket();
-			Log.d("ERRORCHECK", "creating socket");
-			mSocket.connect(new InetSocketAddress(mIP, mPort), 0); // hard-code server address
+			Log.d("ERRORCHECK", "creating video socket");
+			mSocket.connect(new InetSocketAddress(mIp, mPort), 0); // hard-code server address
 			BufferedOutputStream outputStream = new BufferedOutputStream(mSocket.getOutputStream());
 			BufferedInputStream inputStream = new BufferedInputStream(mSocket.getInputStream());
 			
@@ -102,21 +102,23 @@ public class SocketClient extends Thread {
 				jsonObj.addProperty("state", "ok");
 				outputStream.write(jsonObj.toString().getBytes());
 				outputStream.flush();
-				
 				// read image data
-					
+
 				while(true) {
 					//read image buffer length
 					int length_bytes_read = 0;
 					int just_read;
-					while (length_bytes_read < 4) { // 4 bytes to an int
+					while (length_bytes_read < 4) {
 						just_read = inputStream.read(length_buff, length_bytes_read, 4 - length_bytes_read);
 						length_bytes_read += just_read;
 					}
 					int updated_length = bytesToInt(length_buff);
+					//Log.d("ERRORCHECK", "read new length as: " + updated_length);
 					imageBuff = new byte[updated_length];
+					//mBufferManager = new BufferManager(updated_length, width, height);
+					//mBufferManager.setOnDataListener(mDataListener);
 					
-					// read image 
+					// read image
 					int image_bytes_read = 0;
 					while (image_bytes_read < updated_length) {
 						just_read = inputStream.read(imageBuff, image_bytes_read, updated_length - image_bytes_read);
@@ -127,9 +129,9 @@ public class SocketClient extends Thread {
     				opt.inPurgeable = true;
     				opt.inDither = true;
     				opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-    				
-    				// convert byte array to bitmap
 					Bitmap b = BitmapFactory.decodeByteArray(imageBuff, 0, imageBuff.length, opt);
+					//mBufferManager.fillBuffer(imageBuff, updated_length);
+
 					mDataListener.onDirty(b);
 					
 				}
@@ -161,7 +163,7 @@ public class SocketClient extends Thread {
 	public int bytesToInt(byte[] int_bytes) throws IOException {
 		return ByteBuffer.wrap(int_bytes).getInt();
 	}
-
+	
 	
 	public void close() {
 		if (mSocket != null) {
