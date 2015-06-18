@@ -27,11 +27,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.googlecode.javacv.CanvasFrame;
-import com.googlecode.javacv.FrameGrabber;
-import com.googlecode.javacv.OpenCVFrameGrabber;
-import com.googlecode.javacv.FrameGrabber.Exception;
-import com.googlecode.javacv.cpp.opencv_core.IplImage;
+import org.bytedeco.javacv.CanvasFrame;
+import org.bytedeco.javacv.FrameGrabber;
+import org.bytedeco.javacv.OpenCVFrameGrabber;
+import org.bytedeco.javacv.FrameGrabber.Exception;
+import static org.bytedeco.javacpp.opencv_core.*;
+import static org.bytedeco.javacpp.opencv_imgproc.*;
+import static org.bytedeco.javacpp.opencv_highgui.*;
 
 public class AudioServer extends Thread {
 	private ServerSocket mServer;

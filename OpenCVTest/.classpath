@@ -3,7 +3,24 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCV"/>
-	<classpathentry kind="lib" path="/Users/eyzhou/Downloads/javacv-bin/javacv.jar"/>
 	<classpathentry kind="lib" path="/Users/eyzhou/Desktop/Android-IP-Camera/libs/gson/gson-2.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/javacv.jar"/>
+	<classpathentry kind="lib" path="lib/opencv-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacpp.jar"/>
+	<classpathentry kind="lib" path="lib/opencv-android-arm.jar"/>
+	<classpathentry kind="lib" path="lib/opencv-android-x86.jar"/>
+	<classpathentry kind="lib" path="lib/opencv-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/opencv-linux-x86.jar"/>
+	<classpathentry kind="lib" path="lib/opencv-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/opencv-windows-x86.jar"/>
+	<classpathentry kind="lib" path="lib/opencv.jar"/>
+	<classpathentry kind="lib" path="lib/ffmpeg-android-arm.jar"/>
+	<classpathentry kind="lib" path="lib/ffmpeg-android-x86.jar"/>
+	<classpathentry kind="lib" path="lib/ffmpeg-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/ffmpeg-linux-x86.jar"/>
+	<classpathentry kind="lib" path="lib/ffmpeg-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/ffmpeg-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/ffmpeg-windows-x86.jar"/>
+	<classpathentry kind="lib" path="lib/ffmpeg.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

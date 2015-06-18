@@ -1,8 +1,14 @@
-import com.googlecode.javacv.CanvasFrame;
-import com.googlecode.javacv.FrameGrabber;
-import com.googlecode.javacv.FrameGrabber.Exception;
-import com.googlecode.javacv.OpenCVFrameGrabber;
-import com.googlecode.javacv.cpp.opencv_core.IplImage;
+import org.bytedeco.javacv.CanvasFrame;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber;
+import org.bytedeco.javacv.Java2DFrameConverter;
+import org.bytedeco.javacv.OpenCVFrameConverter;
+import org.bytedeco.javacv.FrameGrabber.Exception;
+import org.bytedeco.javacv.OpenCVFrameGrabber;
+
+import static org.bytedeco.javacpp.opencv_core.*;
+import static org.bytedeco.javacpp.opencv_imgproc.*;
+import static org.bytedeco.javacpp.opencv_highgui.*;
 
 
 
@@ -16,7 +22,8 @@ public class GrabberShow implements Runnable {
     @Override
     public void run() {
         FrameGrabber grabber = new OpenCVFrameGrabber(0);
-        
+        OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
+		Java2DFrameConverter javaconverter = new Java2DFrameConverter(); 
         
         int i=0;
 
@@ -26,16 +33,18 @@ public class GrabberShow implements Runnable {
 			} catch (Exception e) {
 			}
             IplImage img = null;
+            Frame frame = null;
             while (true) {
                 try {
-					img = grabber.grab();
+                	frame = grabber.grab();
+					img = converter.convert(frame);
 				} catch (Exception e) {
 				}
                 if (img != null) {
                 	System.out.println(grabber.getImageWidth());
                     System.out.println(grabber.getImageHeight());
                     // show image on window
-                    canvas.showImage(img);
+                    canvas.showImage(frame);
                     img.getByteBuffer();
                 }
                 
