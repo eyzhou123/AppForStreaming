@@ -31,6 +31,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.avcodec;
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
@@ -47,6 +48,8 @@ import org.bytedeco.javacv.OpenCVFrameRecorder;
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_highgui.*;
+import static org.bytedeco.javacpp.avcodec.AV_CODEC_ID_AAC;
+import static org.bytedeco.javacpp.avcodec.AV_CODEC_ID_H264;
 
 public class SocketServer extends Thread {
 	private ServerSocket mServer;
@@ -92,7 +95,7 @@ public class SocketServer extends Thread {
 //			// TODO Auto-generated catch block
 //			e3.printStackTrace();
 //		}
-		
+		FrameGrabber grabber = new OpenCVFrameGrabber(0);
 		recorder = new FFmpegFrameRecorder(path+timestamp+".mp4", 
 				700, 600);
 		
@@ -101,12 +104,20 @@ public class SocketServer extends Thread {
 //		recorder.setVideoCodec(CV_FOURCC((byte)'M',(byte)'J',(byte)'P',(byte)'G'));
 //		recorder.setBitrate(10 * 1024 * 1024);
 //		recorder.setVideoCodec(CV_FOURCC_DEFAULT);
-		recorder.setVideoCodec(13);
+		
+		recorder.setVideoCodec(AV_CODEC_ID_H264);
 		recorder.setFrameRate(15);
 		recorder.setFormat("mp4"); 
         recorder.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
+        recorder.setSampleFormat(grabber.getSampleFormat());
+        recorder.setSampleRate(grabber.getSampleRate()); 
+        recorder.setAudioCodec(AV_CODEC_ID_AAC);
 		
-		
+//        recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
+//        recorder.setFormat("mp4");
+//        recorder.setFrameRate(grabber.getFrameRate());
+//        recorder.setSampleFormat(grabber.getSampleFormat());
+//        recorder.setSampleRate(grabber.getSampleRate()); 
 		
 		
 		while(true) {
@@ -135,7 +146,7 @@ public class SocketServer extends Thread {
 				outputStream = new BufferedOutputStream(socket.getOutputStream());
 
 				canvas.setCanvasSize(600, 480);
-				FrameGrabber grabber = new OpenCVFrameGrabber(0);
+				
 				//FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(path+timestamp+"");
 				// minimum: 640x480 ?
 				grabber.setImageWidth(700);
@@ -223,13 +234,13 @@ public class SocketServer extends Thread {
 							while (true) {
 								try {
 //									img = grabber.grab();
-									frame = grabber.grab();
+									frame = grabber.grabFrame();
 									img = converter.convert(frame);
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									//e.printStackTrace();
 								}
-								if (img != null) {
+								if (frame != null) {
 //									canvas.showImage(img);
 									canvas.showImage(frame);
 									try {
