@@ -55,7 +55,7 @@ public class SocketServer extends Thread {
 	private ServerSocket mServer;
 	CanvasFrame canvas = new CanvasFrame("Web Cam");
 	Date date;
-	private boolean recording = false;
+	public static boolean recording = false;
 	//private FrameRecorder recorder = null;
 	public static FFmpegFrameRecorder recorder = null;
 	
@@ -83,9 +83,7 @@ public class SocketServer extends Thread {
 		}
 //		Loader.load(opencv_objdetect.class);
 		
-		date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_h.mm.ssa");
-		String timestamp = sdf.format(date);
+		
 		
 	
 //		try {
@@ -96,8 +94,8 @@ public class SocketServer extends Thread {
 //			e3.printStackTrace();
 //		}
 		FrameGrabber grabber = new OpenCVFrameGrabber(0);
-		recorder = new FFmpegFrameRecorder(path+timestamp+".mp4", 
-				700, 600);
+		
+		
 		
 //		recorder.setCodecID(CODEC_ID_MPEG1VIDEO);
 //		recorder.setVideoCodec(CV_FOURCC((byte)'I',(byte)'Y',(byte) 'U',(byte) 'V'));
@@ -105,13 +103,7 @@ public class SocketServer extends Thread {
 //		recorder.setBitrate(10 * 1024 * 1024);
 //		recorder.setVideoCodec(CV_FOURCC_DEFAULT);
 		
-		recorder.setVideoCodec(AV_CODEC_ID_H264);
-		recorder.setFrameRate(15);
-		recorder.setFormat("mp4"); 
-        recorder.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
-        recorder.setSampleFormat(grabber.getSampleFormat());
-        recorder.setSampleRate(grabber.getSampleRate()); 
-        recorder.setAudioCodec(AV_CODEC_ID_AAC);
+		
 		
 //        recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
 //        recorder.setFormat("mp4");
@@ -133,6 +125,19 @@ public class SocketServer extends Thread {
 
 				if (!recording) {
 			        try {
+			        	date = new Date();
+			    		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_h.mm.ssa");
+			    		String timestamp = sdf.format(date);
+			    		recorder = new FFmpegFrameRecorder(path+timestamp+".mp4", 
+			    				700, 600);
+			    		recorder.setVideoCodec(AV_CODEC_ID_H264);
+			    		recorder.setFrameRate(15);
+			    		recorder.setFormat("mp4"); 
+			            recorder.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
+			            recorder.setSampleFormat(grabber.getSampleFormat());
+			            recorder.setSampleRate(grabber.getSampleRate()); 
+			            recorder.setAudioCodec(AV_CODEC_ID_AAC);
+			    		
 						recorder.start();
 						recording = true;
 						System.out.println("Recording video");
@@ -140,7 +145,7 @@ public class SocketServer extends Thread {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
-				}
+				} 
 				
 				inputStream = new BufferedInputStream(socket.getInputStream());
 				outputStream = new BufferedOutputStream(socket.getOutputStream());
@@ -293,6 +298,7 @@ public class SocketServer extends Thread {
 					try {
 						recorder.stop();
 						recorder.release();
+						recording = false;
 						System.out.println("Stopped recording video");
 					} catch (org.bytedeco.javacv.FrameRecorder.Exception e) {
 						// TODO Auto-generated catch block
@@ -312,6 +318,8 @@ public class SocketServer extends Thread {
 			if (recording) {
 				try {
 					recorder.stop();
+					recorder.release();
+					recording = false;
 					System.out.println("Stopped recording video");
 				} catch (org.bytedeco.javacv.FrameRecorder.Exception e1) {
 					// TODO Auto-generated catch block

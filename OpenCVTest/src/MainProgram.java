@@ -7,5 +7,21 @@ public class MainProgram {
 		
 		server.start();
 		audio_socket.start();
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+		    @Override
+		    public void run() {
+		        System.out.println("Server was closed");
+			        try {
+						SocketServer.recorder.stop();
+						SocketServer.recorder.release();
+						SocketServer.recording = false;
+						System.out.println("Stopped recording video");
+					} catch (org.bytedeco.javacv.FrameRecorder.Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		    }
+		});
 	}
 }
