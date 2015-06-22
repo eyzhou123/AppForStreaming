@@ -1,9 +1,21 @@
+import java.io.IOException;
+
+import javax.swing.JFrame;
 
 public class MainProgram {
+	public static SocketServer server = new SocketServer();
+	public static AudioServer audio_socket = new AudioServer();
+	public static boolean exit = false;
+	
 	public static void main (String [] args) {
+		
+		GUI gui = new GUI();
+		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gui.setSize(200, 100);
+		gui.setVisible(true);
+		
 		//GrabberShow grabber = new GrabberShow();
-		SocketServer server = new SocketServer();
-		AudioServer audio_socket = new AudioServer();
+		
 		
 		server.start();
 		audio_socket.start();
@@ -11,17 +23,21 @@ public class MainProgram {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 		    @Override
 		    public void run() {
-		        System.out.println("Server was closed");
-			        try {
-						SocketServer.recorder.stop();
-						SocketServer.recorder.release();
-						SocketServer.recording = false;
-						System.out.println("Stopped recording video");
-					} catch (org.bytedeco.javacv.FrameRecorder.Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+		        System.out.println("Server exited.");
 		    }
 		});
+		
+		
+		
+		
+//		// merge video and audio to one final video
+//		Runtime rt = Runtime.getRuntime();
+//		try {
+//			Process pr = rt.exec("ffmpeg -i audio.wav -i video.mp4 -acodec copy -vcodec copy output.mp4");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 	}
 }
