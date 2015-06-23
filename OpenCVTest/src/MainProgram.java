@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JFrame;
 
@@ -11,7 +13,7 @@ public class MainProgram {
 		
 		GUI gui = new GUI();
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gui.setSize(200, 100);
+		gui.setSize(200, 200);
 		gui.setVisible(true);
 		
 		//GrabberShow grabber = new GrabberShow();
@@ -26,6 +28,42 @@ public class MainProgram {
 		        System.out.println("Server exited.");
 		    }
 		});
+		
+		try {
+			MainProgram.server.join();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			MainProgram.audio_socket.join();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		if (AudioServer.line.isRunning()) {
+			AudioServer.line.stop();
+	        AudioServer.line.drain();
+	        AudioServer.line.close();
+		}
+		
+		// merge video and audio to one final video
+		Runtime rt = Runtime.getRuntime();
+		try {
+			String path_to_ffmpeg = "/usr/local/bin/ffmpeg";
+			System.out.println("Merging audio and video files");
+			
+			Date date = new Date();
+    		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_h.mm.ssa");
+    		String timestamp = sdf.format(date);
+			
+//						Process pr2 = rt.exec("/usr/local/bin/ffmpeg -i /Users/eyzhou/Desktop/audio.wav -i /Users/eyzhou/Desktop/video.mp4 -acodec copy -vcodec copy /Users/eyzhou/Desktop/output.mp4");
+			Process pr2 = rt.exec("/usr/local/bin/ffmpeg -i /Users/eyzhou/Desktop/audio.wav -i /Users/eyzhou/Desktop/video.mp4 -c:v copy -c:a aac -strict experimental /Users/eyzhou/Desktop/" + timestamp + ".mp4");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		

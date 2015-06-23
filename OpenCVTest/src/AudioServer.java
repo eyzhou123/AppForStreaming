@@ -13,7 +13,9 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFileFormat;
@@ -59,7 +61,7 @@ public class AudioServer extends Thread {
 		// TODO Auto-generated method stub
 		super.run();
 
-		System.out.println("server's waiting");
+		System.out.println("audio socket waiting");
 		BufferedInputStream inputStream = null;
 		BufferedOutputStream outputStream = null;
 		Socket socket = null;
@@ -156,6 +158,11 @@ public class AudioServer extends Thread {
 
 
 		} catch (IOException e) {
+			SocketServer.server_is_running = false;
+//			if (!SocketServer.merged) {
+//				SocketServer.merged = true;
+//				GUI.merge();
+//			}
 //			System.out.println("closing mic");
 //	        speakers.drain();
 //	        speakers.close();

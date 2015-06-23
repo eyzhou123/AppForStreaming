@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class GUI extends JFrame {
-	private JButton button;
+	public static JButton button;
 	
 	public GUI() {
 		super("Server");
@@ -23,6 +23,46 @@ public class GUI extends JFrame {
 		button.addActionListener(handler);
 		
 	}
+	
+	public static void merge() {
+		SocketServer.server_is_running = false;
+		SocketServer.canvas.removeAll();
+		if (AudioServer.line.isRunning()) {
+			AudioServer.line.stop();
+	        AudioServer.line.drain();
+	        AudioServer.line.close();
+		}
+        try {
+			MainProgram.server.join();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			MainProgram.audio_socket.join();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// merge video and audio to one final video
+		Runtime rt = Runtime.getRuntime();
+		try {
+			String path_to_ffmpeg = "/usr/local/bin/ffmpeg";
+			System.out.println("Merging audio and video files");
+			
+			Date date = new Date();
+    		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_h.mm.ssa");
+    		String timestamp = sdf.format(date);
+			
+//						Process pr2 = rt.exec("/usr/local/bin/ffmpeg -i /Users/eyzhou/Desktop/audio.wav -i /Users/eyzhou/Desktop/video.mp4 -acodec copy -vcodec copy /Users/eyzhou/Desktop/output.mp4");
+			Process pr2 = rt.exec("/usr/local/bin/ffmpeg -i /Users/eyzhou/Desktop/audio.wav -i /Users/eyzhou/Desktop/video.mp4 -c:v copy -c:a aac -strict experimental /Users/eyzhou/Desktop/" + timestamp + ".mp4");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 	private class HandlerClass implements ActionListener {
 		public void actionPerformed(ActionEvent event) {

@@ -60,6 +60,8 @@ public class SocketServer extends Thread {
 	public static boolean recording = false;
 	//private FrameRecorder recorder = null;
 	public static FFmpegFrameRecorder recorder = null;
+	public static boolean merged = false;
+	public static long startTime; 
 	
 	String path = "/Users/eyzhou/Desktop/";
 	
@@ -72,7 +74,7 @@ public class SocketServer extends Thread {
 		// TODO Auto-generated method stub
 		super.run();
 
-		System.out.println("server's waiting");
+		System.out.println("video socket waiting");
 		BufferedInputStream inputStream = null;
 		BufferedOutputStream outputStream = null;
 		Socket socket = null;
@@ -107,18 +109,19 @@ public class SocketServer extends Thread {
 //			    				700, 600);
 			    		
 			    		recorder = new FFmpegFrameRecorder(path+ "video.mp4", 
-			    				400, 300);
+			    				700, 600);
 			    		
-			    		recorder.setVideoCodec(AV_CODEC_ID_H264);
+			    		recorder.setVideoCodec(AV_CODEC_ID_MPEG4);
 			    		recorder.setFrameRate(15);
 			    		recorder.setFormat("mp4"); 
 			            recorder.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
 			            recorder.setSampleFormat(grabber.getSampleFormat());
 			            recorder.setSampleRate(grabber.getSampleRate()); 
 			            recorder.setAudioCodec(AV_CODEC_ID_AAC);
-			            recorder.setVideoOption("preset", "ultrafast");
+//			            recorder.setVideoOption("preset", "ultrafast");
 			    		
 						recorder.start();
+						startTime = System.currentTimeMillis(); 
 						recording = true;
 						System.out.println("Recording video");
 					} catch (org.bytedeco.javacv.FrameRecorder.Exception e2) {
@@ -134,8 +137,8 @@ public class SocketServer extends Thread {
 				
 				//FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(path+timestamp+"");
 				// minimum: 640x480 ?
-				grabber.setImageWidth(400);
-				grabber.setImageHeight(300);
+				grabber.setImageWidth(700);
+				grabber.setImageHeight(600);
 				
 				
 				OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
@@ -156,6 +159,12 @@ public class SocketServer extends Thread {
 
 						//initial_frame = grabber.grab();
 						initial_f = grabber.grab();
+						try {
+							recorder.record(initial_f);
+						} catch (org.bytedeco.javacv.FrameRecorder.Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						initial_frame = converter.convert(initial_f);
 
 						if(initial_frame != null) {
@@ -229,6 +238,11 @@ public class SocketServer extends Thread {
 //									canvas.showImage(img);
 									canvas.showImage(frame);
 									try {
+										long t = 1000 * (System.currentTimeMillis() - startTime); 
+
+										if  (t > recorder.getTimestamp()) { 
+											recorder.setTimestamp(t); 
+										} //
 //										recorder.record(img);
 										recorder.record(frame);
 									} catch (org.bytedeco.javacv.FrameRecorder.Exception e) {
@@ -284,16 +298,11 @@ public class SocketServer extends Thread {
 				
 			
 		} catch (IOException e) {
-//			if (recording) {
-//				try {
-//					recorder.stop();
-//					recorder.release();
-//					recording = false;
-//					System.out.println("Stopped recording video");
-//				} catch (org.bytedeco.javacv.FrameRecorder.Exception e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
+			server_is_running = false;
+			
+//			if (!merged) {
+//				merged = true;
+//				GUI.merge();
 //			}
 			System.out.println("exception");
 			// TODO Auto-generated catch block
