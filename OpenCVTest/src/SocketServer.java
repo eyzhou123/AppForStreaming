@@ -63,7 +63,7 @@ public class SocketServer extends Thread {
 	public static boolean merged = false;
 	public static long startTime; 
 	
-	String path = "/Users/eyzhou/Desktop/";
+	public static String path = "/Users/eyzhou/Desktop/";
 	
 	public SocketServer() {
 		canvas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
