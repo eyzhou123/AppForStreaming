@@ -201,8 +201,9 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
         layoutMain.addView(layoutLeft, layout_left_params);
         
         imageView = (ImageView) new ImageView(this);
+        imageView.setAdjustViewBounds(true);
         LinearLayout.LayoutParams image_params = new LinearLayout.LayoutParams(
-        	600, height/2);
+        	LinearLayout.LayoutParams.MATCH_PARENT, 200);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         //layoutMain.addView(imageView, image_params);
         
