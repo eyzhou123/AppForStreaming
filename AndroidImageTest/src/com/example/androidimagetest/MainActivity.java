@@ -44,6 +44,7 @@ public class MainActivity extends Activity implements DataListener {
 	    socketclient.start();
 	    audioclient.start();
 	    
+	    
 	}
 
 	private void paint() {

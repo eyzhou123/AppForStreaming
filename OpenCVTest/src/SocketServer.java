@@ -109,7 +109,7 @@ public class SocketServer extends Thread {
 //			    				700, 600);
 			    		
 			    		recorder = new FFmpegFrameRecorder(path+ "video.mp4", 
-			    				700, 600);
+			    				200, 150);
 			    		
 			    		recorder.setVideoCodec(AV_CODEC_ID_MPEG4);
 			    		recorder.setFrameRate(15);
@@ -137,8 +137,8 @@ public class SocketServer extends Thread {
 				
 				//FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(path+timestamp+"");
 				// minimum: 640x480 ?
-				grabber.setImageWidth(700);
-				grabber.setImageHeight(600);
+				grabber.setImageWidth(200);
+				grabber.setImageHeight(150);
 				
 				
 				OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
