@@ -61,10 +61,11 @@ public class SocketServer extends Thread {
 	public static FFmpegFrameRecorder recorder = null;
 	public static boolean merged = false;
 	public static long startTime; 
+	public static boolean client_closed = false;
 	
 	// ADJUST VIDEO SIZE HERE
-	private static int video_width = 200;
-	private static int video_height = 150;
+	private static int video_width = 400;
+	private static int video_height = 300;
 	
 	public static String path = "/Users/eyzhou/Desktop/";
 	
@@ -93,6 +94,7 @@ public class SocketServer extends Thread {
 		// the server_is_running variable keeps server open for new client connections
 		while(server_is_running) {
 		try {
+			
 				if (byteArray != null)
 					byteArray.reset();
 				else
@@ -112,14 +114,14 @@ public class SocketServer extends Thread {
 			    		recorder = new FFmpegFrameRecorder(path + "video.mp4", 
 			    				video_width, video_height);
 			    		
-			    		recorder.setVideoCodec(AV_CODEC_ID_MPEG4);
-			    		recorder.setFrameRate(15);
+			    		recorder.setVideoCodec(AV_CODEC_ID_H264);
+			    		recorder.setFrameRate(30);
 			    		recorder.setFormat("mp4"); 
 			            recorder.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
 			            recorder.setSampleFormat(grabber.getSampleFormat());
 			            recorder.setSampleRate(grabber.getSampleRate()); 
 			            recorder.setAudioCodec(AV_CODEC_ID_AAC);
-			            recorder.setVideoOption("preset", "ultrafast");
+//			            recorder.setVideoOption("preset", "ultrafast");
 			    		
 						recorder.start();
 						startTime = System.currentTimeMillis(); 
@@ -255,12 +257,13 @@ public class SocketServer extends Thread {
 									outputStream.write(intToBytes(bytes.length));
 									outputStream.write(bytes); 
 									outputStream.flush();
-
+									
 									if (Thread.currentThread().isInterrupted())
 									{
 										System.out.println("??");
 										break;
 									}
+									client_closed = false;
 								}
 								else {
 									System.out.println(":(");
@@ -290,6 +293,7 @@ public class SocketServer extends Thread {
 		
 		} catch (IOException e) {
 			// client side closed
+			client_closed = true;
 			GUI.make_video_v();
 			System.out.println("exception");
 			e.printStackTrace();
@@ -305,7 +309,7 @@ public class SocketServer extends Thread {
 				recorder.stop();
 				recorder.release();
 				recording = false;
-				System.out.println("Stopped recording video");
+				//System.out.println("Stopped recording video");
 			} catch (org.bytedeco.javacv.FrameRecorder.Exception e1) {
 				e1.printStackTrace();
 			}

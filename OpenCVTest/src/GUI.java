@@ -35,7 +35,7 @@ public class GUI extends JFrame {
 	
 	public static void make_video_a() {
 		// Take care of closing speakers/microphone 
-		System.out.println("closing mic");
+		//System.out.println("closing mic");
         AudioServer.speakers.drain();
         AudioServer.speakers.close();
         AudioServer.microphone.stop();
@@ -58,7 +58,7 @@ public class GUI extends JFrame {
 				SocketServer.recorder.stop();
 				SocketServer.recorder.release();
 				SocketServer.recording = false;
-				System.out.println("Stopped recording video");
+				//System.out.println("Stopped recording video");
 			} catch (org.bytedeco.javacv.FrameRecorder.Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -98,6 +98,7 @@ public class GUI extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 	
 	
@@ -106,44 +107,45 @@ public class GUI extends JFrame {
 	
 	private class HandlerClass implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			
-			JOptionPane.showMessageDialog(null, "Closed server, saving video.");
-			SocketServer.server_is_running = false;
-			SocketServer.canvas.removeAll();
-			AudioServer.line.stop();
-	        AudioServer.line.drain();
-	        AudioServer.line.close();
-			
-			try {
-				MainProgram.server.join();
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			try {
-				MainProgram.audio_socket.join();
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			
-			// merge video and audio to one final video
-			Runtime rt = Runtime.getRuntime();
-			try {
-				System.out.println("Merging audio and video files");
+			if (!SocketServer.client_closed) {
+				JOptionPane.showMessageDialog(null, "Closed server, saving video.");
+				SocketServer.server_is_running = false;
+				SocketServer.canvas.removeAll();
 				
-				Date date = new Date();
-	    		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_h.mm.ssa");
-	    		String timestamp = sdf.format(date);
+				AudioServer.line.stop();
+		        AudioServer.line.drain();
+		        AudioServer.line.close();
 				
-	    		Process pr2 = rt.exec(MainProgram.path_to_ffmpeg + " -i " + SocketServer.path 
-						+ "audio.wav -i " + SocketServer.path + "video.mp4 -c:v copy -c:a aac -strict experimental " 
-						+ SocketServer.path + timestamp + ".mp4");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try {
+					MainProgram.server.join();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					MainProgram.audio_socket.join();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				// merge video and audio to one final video
+				Runtime rt = Runtime.getRuntime();
+				try {
+					System.out.println("Merging audio and video files");
+					
+					Date date = new Date();
+		    		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_h.mm.ssa");
+		    		String timestamp = sdf.format(date);
+					
+		    		Process pr2 = rt.exec(MainProgram.path_to_ffmpeg + " -i " + SocketServer.path 
+							+ "audio.wav -i " + SocketServer.path + "video.mp4 -c:v copy -c:a aac -strict experimental " 
+							+ SocketServer.path + timestamp + ".mp4");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			
 			System.exit(0);
 			
 		}

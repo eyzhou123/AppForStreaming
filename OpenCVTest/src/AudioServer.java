@@ -171,7 +171,7 @@ public class AudioServer extends Thread {
 		
 		// When server closes, while loop will end and the following code will 
 		// close the microphone/speakers
-		System.out.println("closing mic");
+		//System.out.println("closing mic");
         speakers.drain();
         speakers.close();
         microphone.stop();
