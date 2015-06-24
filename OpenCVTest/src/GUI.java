@@ -18,6 +18,8 @@ public class GUI extends JFrame {
 		super("Server");
 		setLayout(new FlowLayout());
 		
+		// This button should be used when closing the server, because it 
+		// ensures that a video is saved first. 
 		button = new JButton("Stop server");
 		button.setBackground(new Color(0, 229, 255));
 		button.setForeground(Color.BLACK);
@@ -32,22 +34,25 @@ public class GUI extends JFrame {
 	}
 	
 	public static void make_video_a() {
+		// Take care of closing speakers/microphone 
 		System.out.println("closing mic");
         AudioServer.speakers.drain();
         AudioServer.speakers.close();
         AudioServer.microphone.stop();
         AudioServer.microphone.close();
         
+        // This will stop recording audio and write the file
 		AudioServer.line.stop();
         AudioServer.line.drain();
         AudioServer.line.close();
-        
-		
 	}
 	
+	// The following two methods are for when the client side closes. They deal with
+	// making sure both audio and video are written before trying to merge. They also
+	// will not exit the program.
+	
 	public static void make_video_v() {
-
-		
+		// Closes the recorder and writes the video file
 		if (SocketServer.recording) {
 			try {
 				SocketServer.recorder.stop();
@@ -60,6 +65,7 @@ public class GUI extends JFrame {
 			}
 		}
 		
+		// Wait for audio to be written
 		while (AudioServer.line.isOpen()) {
 			try {
 				Thread.sleep(200);
@@ -68,14 +74,6 @@ public class GUI extends JFrame {
 				e.printStackTrace();
 			}
 		}
-        
-//		/* BAD STUFF */
-//        try {
-//			Thread.sleep(1500);
-//		} catch (InterruptedException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
         
 	    // merge video and audio to one final video
 		Runtime rt = Runtime.getRuntime();
@@ -86,14 +84,25 @@ public class GUI extends JFrame {
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_h.mm.ssa");
 			String timestamp = sdf.format(date);
 			
+// the following should speed up the video (but only works from commandline)
+//			Process pr2 = rt.exec(MainProgram.path_to_ffmpeg + " -i " + SocketServer.path 
+//					+ "audio.wav -i " + SocketServer.path + "video.mp4 -strict experimental -vf 'setpts=0.7*PTS'" 
+//					+ SocketServer.path + timestamp + ".mp4");
+			
 			Process pr2 = rt.exec(MainProgram.path_to_ffmpeg + " -i " + SocketServer.path 
-					+ "audio.wav -i " + SocketServer.path + "video.mp4 -c:v copy -c:a aac -strict experimental " 
+					+ "audio.wav -i " + SocketServer.path + "video.mp4 -strict experimental " 
 					+ SocketServer.path + timestamp + ".mp4");
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	
+	// The following will write the files, wait for the two threads to end, and then merge them. 
+	// Then, the program will exit.
 	
 	private class HandlerClass implements ActionListener {
 		public void actionPerformed(ActionEvent event) {

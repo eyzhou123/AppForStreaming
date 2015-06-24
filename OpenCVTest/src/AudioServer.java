@@ -50,7 +50,7 @@ public class AudioServer extends Thread {
     public static SourceDataLine speakers;
     
 	// path of the wav file
-    File wavFile = new File("/Users/eyzhou/Desktop/" + "audio.wav");
+    File wavFile = new File(SocketServer.path + "audio.wav");
 
 	public AudioServer() {
 		canvas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,6 +72,8 @@ public class AudioServer extends Thread {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		// the server_is_running variable keeps server open for new client connections
 		while(SocketServer.server_is_running) {
 		try {
 			if (byteArray != null)
@@ -105,6 +107,7 @@ public class AudioServer extends Thread {
 		        line.open(format);
 		        line.start();
 		        
+		        // the following thread is to record a wav file at the same time
 		        Thread recording_thread = new Thread(new Runnable() {
 		            public void run() {
 		            	// Write data to saved wav file
@@ -158,38 +161,16 @@ public class AudioServer extends Thread {
 
 
 		} catch (IOException e) {
-//			SocketServer.server_is_running = false;
+			// client side closed
 			GUI.make_video_a();
 			e.printStackTrace();
-//		} finally {
-//			try {
-//				if (outputStream != null) {
-//					System.out.println("closed");
-//					outputStream.close();
-//					outputStream = null;
-//				}
-//
-//				if (inputStream != null) {
-//					inputStream.close();
-//					inputStream = null;
-//				}
-//
-//				if (socket != null) {
-//					socket.close();
-//					socket = null;
-//				}
-//
-//				if (byteArray != null) {
-//					byteArray.close();
-//				}
-//
-//			} catch (IOException e) {
-//
-//			}
+
 
 		}
 	}
 		
+		// When server closes, while loop will end and the following code will 
+		// close the microphone/speakers
 		System.out.println("closing mic");
         speakers.drain();
         speakers.close();
