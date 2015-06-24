@@ -41,12 +41,12 @@ public class GUI extends JFrame {
 		AudioServer.line.stop();
         AudioServer.line.drain();
         AudioServer.line.close();
+        
+		
 	}
 	
 	public static void make_video_v() {
-//		if (AudioServer.microphone.isOpen()) {
-//			System.out.println("...");
-//		}
+
 		
 		if (SocketServer.recording) {
 			try {
@@ -59,14 +59,23 @@ public class GUI extends JFrame {
 				e1.printStackTrace();
 			}
 		}
-        
 		
-        try {
-			Thread.sleep(1500);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		while (AudioServer.line.isOpen()) {
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+        
+//		/* BAD STUFF */
+//        try {
+//			Thread.sleep(1500);
+//		} catch (InterruptedException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
         
 	    // merge video and audio to one final video
 		Runtime rt = Runtime.getRuntime();

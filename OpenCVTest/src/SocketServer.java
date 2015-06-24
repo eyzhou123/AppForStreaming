@@ -118,7 +118,7 @@ public class SocketServer extends Thread {
 			            recorder.setSampleFormat(grabber.getSampleFormat());
 			            recorder.setSampleRate(grabber.getSampleRate()); 
 			            recorder.setAudioCodec(AV_CODEC_ID_AAC);
-//			            recorder.setVideoOption("preset", "ultrafast");
+			            recorder.setVideoOption("preset", "ultrafast");
 			    		
 						recorder.start();
 						startTime = System.currentTimeMillis(); 
@@ -299,7 +299,6 @@ public class SocketServer extends Thread {
 		
 		} catch (IOException e) {
 			// client side closed
-//			server_is_running = false;
 			GUI.make_video_v();
 			System.out.println("exception");
 			e.printStackTrace();
