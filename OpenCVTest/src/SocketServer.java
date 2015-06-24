@@ -296,16 +296,12 @@ public class SocketServer extends Thread {
 					e.printStackTrace();
 				}
 				
-			
+		
 		} catch (IOException e) {
-			server_is_running = false;
-			
-//			if (!merged) {
-//				merged = true;
-//				GUI.merge();
-//			}
+			// client side closed
+//			server_is_running = false;
+			GUI.make_video_v();
 			System.out.println("exception");
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 //		} finally {
 //			try {

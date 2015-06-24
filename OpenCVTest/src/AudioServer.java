@@ -158,16 +158,8 @@ public class AudioServer extends Thread {
 
 
 		} catch (IOException e) {
-			SocketServer.server_is_running = false;
-//			if (!SocketServer.merged) {
-//				SocketServer.merged = true;
-//				GUI.merge();
-//			}
-//			System.out.println("closing mic");
-//	        speakers.drain();
-//	        speakers.close();
-//	        microphone.close();
-			// TODO Auto-generated catch block
+//			SocketServer.server_is_running = false;
+			GUI.make_video_a();
 			e.printStackTrace();
 //		} finally {
 //			try {
