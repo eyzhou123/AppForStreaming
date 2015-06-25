@@ -3,6 +3,7 @@ package com.example.androidimagetest;
 import java.io.File;
 import java.util.LinkedList;
 
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.Button;
 import android.widget.ImageView;
 
 
@@ -22,6 +24,14 @@ public class MainActivity extends Activity implements DataListener {
 	private Handler handler;
 	
 	public static File cache_dir;
+	
+	private CameraPreview mPreview;
+    private CameraManager mCameraManager;
+    private boolean mIsOn = true;
+    private SocketClientAndroid mThread;
+    private Button mButton;
+    private String mIP = "128.237.223.104";
+    private int mPort = 8888;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +42,15 @@ public class MainActivity extends Activity implements DataListener {
 	    socketclient.setOnDataListener(this);
 	    
 	    AudioClient audioclient = new AudioClient();
+////
+	    if (mIP == null) {
+  		  mThread = new SocketClientAndroid(mPreview);
+  	  	}
+  	  	else {
+  	  		mThread = new SocketClientAndroid(mPreview, mIP, 8880);
+  	  	}
 	    
-	    
-	    
+////	    
 	    cache_dir = getCacheDir();
 	   
 	    handler = new Handler();
@@ -85,6 +101,20 @@ public class MainActivity extends Activity implements DataListener {
 			mQueue.add(bufferedImage);
 		}
 		paint();
+	}
+	
+	private void closeSocketClient() {
+		if (mThread == null)
+			return;
+		
+		mThread.interrupt();
+        try {
+			mThread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        mThread = null;
 	}
 
 }
