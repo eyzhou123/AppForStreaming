@@ -86,7 +86,6 @@ public class SocketServerAndroid extends Thread {
 	                    break;
 	                }
 				}
-				
 				if (imageBuff != null) {
 				    JsonObject jsonObj = new JsonObject();
 		            jsonObj.addProperty("state", "ok");
@@ -95,7 +94,9 @@ public class SocketServerAndroid extends Thread {
 		            
 		            // read image data
 				    while ((len = inputStream.read(imageBuff)) != -1) {
+				    	System.out.println("READING IMAGE DATA");
 	                    mBufferManager.fillBuffer(imageBuff, len);
+	                    System.out.println("IMAGEBUFF IS SIZE: " + imageBuff.length);
 	                }
 				}
 				

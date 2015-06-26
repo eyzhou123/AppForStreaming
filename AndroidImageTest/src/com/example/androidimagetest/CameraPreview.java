@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
+import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 import android.os.Environment;
@@ -32,7 +33,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private byte[] mLastFrame = null;
     private int mFrameLength;
 
-    public CameraPreview(Context context, Camera camera) {
+    @SuppressWarnings("deprecation")
+	public CameraPreview(Context context, Camera camera) {
         super(context);
         mCamera = camera;
 
@@ -70,11 +72,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-
         if (mHolder.getSurface() == null){
           return;
         }
-
+        
         try {
             mCamera.stopPreview();
             resetBuff();
@@ -84,6 +85,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
 
         try {
+        	
             mCamera.setPreviewCallback(mPreviewCallback);
             mCamera.setPreviewDisplay(mHolder);
             mCamera.startPreview();
@@ -91,7 +93,16 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } catch (Exception e){
             Log.d(TAG, "Error starting camera preview: " + e.getMessage());
         }
+    	//mCamera.takePicture(null, rawCallback, null);
     }
+    
+//    private Camera.PictureCallback rawCallback = new PictureCallback() {
+//		@Override
+//		public void onPictureTaken(byte[] arg0, Camera arg1) {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//    };
     
     public void setCamera(Camera camera) {
     	mCamera = camera;
@@ -103,12 +114,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 				mLastFrame = mQueue.poll();
 			}
     	}
-        
+        if (mQueue.size() == 0) {
+        	Log.d("ERRORCHECK", "QUEUE IS EMPTY");
+        }
         return mLastFrame;
     }
     
     private void resetBuff() {
-        
         synchronized (mQueue) {
         	mQueue.clear();
         	mLastFrame = null;
@@ -145,6 +157,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     				mQueue.poll();
     			}
     			mQueue.add(data);
+    			Log.d("ERRORCHECK", "queue" + mQueue.size());
         	}
         }
     };

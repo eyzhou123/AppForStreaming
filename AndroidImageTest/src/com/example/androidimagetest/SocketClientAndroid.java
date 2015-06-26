@@ -21,6 +21,9 @@ public class SocketClientAndroid extends Thread {
 	
 	public SocketClientAndroid(CameraPreview preview, String ip, int port) {
 	    mCameraPreview = preview;
+	    if (mCameraPreview == null) {
+	    	Log.d("ERRORCHECK", "mCamera is NULL");
+	    }
 	    mIP = ip;
 	    mPort = port;
 		start();
@@ -39,6 +42,7 @@ public class SocketClientAndroid extends Thread {
 		try {
 			mSocket = new Socket();
 			mSocket.connect(new InetSocketAddress(mIP, mPort), 10000); // hard-code server address
+			
 			BufferedOutputStream outputStream = new BufferedOutputStream(mSocket.getOutputStream());
 			BufferedInputStream inputStream = new BufferedInputStream(mSocket.getInputStream());
 			
@@ -47,13 +51,16 @@ public class SocketClientAndroid extends Thread {
             jsonObj.addProperty("length", mCameraPreview.getPreviewLength());
             jsonObj.addProperty("width", mCameraPreview.getPreviewWidth());
             jsonObj.addProperty("height", mCameraPreview.getPreviewHeight());
-            
+           
 			byte[] buff = new byte[256];
 			int len = 0;
             String msg = null;
+            
             outputStream.write(jsonObj.toString().getBytes());
             outputStream.flush();
-                        
+            
+            
+          
             while ((len = inputStream.read(buff)) != -1) {
                 msg = new String(buff, 0, len);
                 
@@ -63,26 +70,29 @@ public class SocketClientAndroid extends Thread {
                 JsonElement element = null;
                 try {
                     element =  parser.parse(msg);
-                    if (element == null) {
-                    	Log.d("ERROR CHECK", "null message");
-                    } else {
-                    	Log.d("ERROR CHECK", "non-null message");
-                    }
                 }
                 catch (JsonParseException e) {
                     Log.e(TAG, "exception: " + e);
                     isJSON = false;
                 }
+                
                 if (isJSON && element != null) {
                     JsonObject obj = element.getAsJsonObject();
                     element = obj.get("state");
                     if (element != null && element.getAsString().equals("ok")) {
                         // send data
                         while (true) {
-                        	Log.d("ERRORCHECK", "sending " + mCameraPreview.getImageBuffer().length);
+                        	Log.d("ERRORCHECK", "SENDING");
+//                        	byte[] byt = mCameraPreview.getImageBuffer();
+//                        	if (byt == null) {
+//                        		Log.d("ERRORCHECK", "NULL IMAGEBUFFER");
+//                        	} else if (byt.length == 0) {
+//                        		Log.d("ERRORCHECK", "EMPTY IMAGEBUFFER");
+//                        	}
                             outputStream.write(mCameraPreview.getImageBuffer());
+                            Log.d("ERRORCHECK", "SENDING2");
                             outputStream.flush();
-                            
+                            Log.d("ERRORCHECK", "SENDING3");
                             if (Thread.currentThread().isInterrupted())
                                 break;
                         }

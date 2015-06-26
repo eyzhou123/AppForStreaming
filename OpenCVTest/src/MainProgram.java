@@ -52,7 +52,7 @@ public class MainProgram extends JPanel implements DataListener {
                 }
             });
  
-        f.add(new ServerUIMain());
+        f.add(new MainProgram());
         f.pack();
         f.setVisible(true);
 ////
@@ -101,23 +101,10 @@ public class MainProgram extends JPanel implements DataListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
-		
-//		// merge video and audio to one final video
-//		Runtime rt = Runtime.getRuntime();
-//		try {
-//			Process pr = rt.exec("ffmpeg -i audio.wav -i video.mp4 -acodec copy -vcodec copy output.mp4");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
 	}
 	
 	private void updateUI(BufferedImage bufferedImage) {
-
+		System.out.println("UPDATING UI");
         synchronized (mQueue) {
         	if (mQueue.size() ==  MAX_BUFFER) {
         		mLastFrame = mQueue.poll();
@@ -130,7 +117,7 @@ public class MainProgram extends JPanel implements DataListener {
 	
 	public Dimension getPreferredSize() {
         if (mImage == null) {
-             return new Dimension(960,720); // init window size
+             return new Dimension(960, 720); // init window size
         } else {
            return new Dimension(mImage.getWidth(null), mImage.getHeight(null));
        }

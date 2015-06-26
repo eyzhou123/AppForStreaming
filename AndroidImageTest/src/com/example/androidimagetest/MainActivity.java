@@ -3,7 +3,6 @@ package com.example.androidimagetest;
 import java.io.File;
 import java.util.LinkedList;
 
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,6 +11,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 
@@ -31,7 +31,7 @@ public class MainActivity extends Activity implements DataListener {
     private SocketClientAndroid mThread;
     private Button mButton;
     private String mIP = "128.237.223.104";
-    private int mPort = 8888;
+    private int mPort = 8880;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,11 @@ public class MainActivity extends Activity implements DataListener {
 	    
 	    AudioClient audioclient = new AudioClient();
 ////
+	    mCameraManager = new CameraManager(this);
+	    mPreview = new CameraPreview(this, mCameraManager.getCamera());
+	    FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+        preview.addView(mPreview);
+        
 	    if (mIP == null) {
   		  mThread = new SocketClientAndroid(mPreview);
   	  	}
@@ -57,9 +62,10 @@ public class MainActivity extends Activity implements DataListener {
 	    
 	    mImageView = (ImageView) findViewById(R.id.image_view);
 	    
+	    
+	    
 	    socketclient.start();
 	    audioclient.start();
-	    
 	    
 	}
 
@@ -101,6 +107,14 @@ public class MainActivity extends Activity implements DataListener {
 			mQueue.add(bufferedImage);
 		}
 		paint();
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		mCameraManager.onResume();
+		mPreview.setCamera(mCameraManager.getCamera());
 	}
 	
 	private void closeSocketClient() {
