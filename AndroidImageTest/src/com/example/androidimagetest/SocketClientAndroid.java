@@ -82,17 +82,18 @@ public class SocketClientAndroid extends Thread {
                     if (element != null && element.getAsString().equals("ok")) {
                         // send data
                         while (true) {
-                        	Log.d("ERRORCHECK", "SENDING");
 //                        	byte[] byt = mCameraPreview.getImageBuffer();
 //                        	if (byt == null) {
 //                        		Log.d("ERRORCHECK", "NULL IMAGEBUFFER");
 //                        	} else if (byt.length == 0) {
 //                        		Log.d("ERRORCHECK", "EMPTY IMAGEBUFFER");
 //                        	}
+                        	
+                        	while (CameraPreview.mQueue.size() == 0) {
+                        		Thread.sleep(200);
+                        	}
                             outputStream.write(mCameraPreview.getImageBuffer());
-                            Log.d("ERRORCHECK", "SENDING2");
                             outputStream.flush();
-                            Log.d("ERRORCHECK", "SENDING3");
                             if (Thread.currentThread().isInterrupted())
                                 break;
                         }

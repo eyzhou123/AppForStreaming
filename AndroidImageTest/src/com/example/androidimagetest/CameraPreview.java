@@ -14,7 +14,6 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
-import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 import android.os.Environment;
@@ -28,7 +27,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private static final String TAG = "camera";
     private Size mPreviewSize;
     private byte[] mImageData;
-    private LinkedList<byte[]> mQueue = new LinkedList<byte[]>();
+    public static LinkedList<byte[]> mQueue = new LinkedList<byte[]>();
     private static final int MAX_BUFFER = 15;
     private byte[] mLastFrame = null;
     private int mFrameLength;
@@ -48,7 +47,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         	Log.i(TAG, "preview size = " + s.width + ", " + s.height);
         }
         
-        params.setPreviewSize(640, 480); // set preview size. smaller is better
+        //params.setPreviewSize(640, 480); // set preview size. smaller is better
+        params.setPreviewSize(320, 240);
         mCamera.setParameters(params);
         
         mPreviewSize = mCamera.getParameters().getPreviewSize();
@@ -93,16 +93,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } catch (Exception e){
             Log.d(TAG, "Error starting camera preview: " + e.getMessage());
         }
-    	//mCamera.takePicture(null, rawCallback, null);
     }
-    
-//    private Camera.PictureCallback rawCallback = new PictureCallback() {
-//		@Override
-//		public void onPictureTaken(byte[] arg0, Camera arg1) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//    };
     
     public void setCamera(Camera camera) {
     	mCamera = camera;

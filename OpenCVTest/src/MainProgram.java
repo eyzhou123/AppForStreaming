@@ -104,7 +104,6 @@ public class MainProgram extends JPanel implements DataListener {
 	}
 	
 	private void updateUI(BufferedImage bufferedImage) {
-		System.out.println("UPDATING UI");
         synchronized (mQueue) {
         	if (mQueue.size() ==  MAX_BUFFER) {
         		mLastFrame = mQueue.poll();
@@ -117,7 +116,7 @@ public class MainProgram extends JPanel implements DataListener {
 	
 	public Dimension getPreferredSize() {
         if (mImage == null) {
-             return new Dimension(960, 720); // init window size
+             return new Dimension(400, 300); // init window size
         } else {
            return new Dimension(mImage.getWidth(null), mImage.getHeight(null));
        }

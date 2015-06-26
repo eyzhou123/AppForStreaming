@@ -1,11 +1,16 @@
 
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import javax.imageio.ImageIO;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -94,10 +99,11 @@ public class SocketServerAndroid extends Thread {
 		            
 		            // read image data
 				    while ((len = inputStream.read(imageBuff)) != -1) {
-				    	System.out.println("READING IMAGE DATA");
 	                    mBufferManager.fillBuffer(imageBuff, len);
-	                    System.out.println("IMAGEBUFF IS SIZE: " + imageBuff.length);
 	                }
+				    
+//				    InputStream in = new ByteArrayInputStream(imageBuff);
+//					BufferedImage buffered = ImageIO.read(in);
 				}
 				
 				if (mBufferManager != null) {
