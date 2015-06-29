@@ -30,7 +30,8 @@ public class MainActivity extends Activity implements DataListener {
     private boolean mIsOn = true;
     private SocketClientAndroid mThread;
     private Button mButton;
-    private String mIP = "128.237.223.104";
+    public static String mIP = "128.237.223.104";
+//    public static String mIP = "10.0.0.8";
     private int mPort = 8880;
 
 	@Override

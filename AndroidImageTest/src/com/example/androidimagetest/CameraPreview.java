@@ -28,9 +28,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private Size mPreviewSize;
     private byte[] mImageData;
     public static LinkedList<byte[]> mQueue = new LinkedList<byte[]>();
-    private static final int MAX_BUFFER = 15;
+    private static final int MAX_BUFFER = 5;
     private byte[] mLastFrame = null;
     private int mFrameLength;
+    private int width = 320;
+    private int height = 240;
 
     @SuppressWarnings("deprecation")
 	public CameraPreview(Context context, Camera camera) {
@@ -47,8 +49,14 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         	Log.i(TAG, "preview size = " + s.width + ", " + s.height);
         }
         
+        for (int i: params.getSupportedPreviewFormats()) { 
+        	Log.i(TAG, "preview formats supported are = " + i);
+        }
+        
         //params.setPreviewSize(640, 480); // set preview size. smaller is better
-        params.setPreviewSize(320, 240);
+        params.setPreviewSize(width, height);
+//        params.setPreviewSize(240, 320);
+//        mCamera.setDisplayOrientation(90);
         mCamera.setParameters(params);
         
         mPreviewSize = mCamera.getParameters().getPreviewSize();
@@ -86,7 +94,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
         try {
         	
-            mCamera.setPreviewCallback(mPreviewCallback);
+            mCamera.setPreviewCallbackWithBuffer(mPreviewCallback);
             mCamera.setPreviewDisplay(mHolder);
             mCamera.startPreview();
 
@@ -106,7 +114,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			}
     	}
         if (mQueue.size() == 0) {
-        	Log.d("ERRORCHECK", "QUEUE IS EMPTY");
+        	//Log.d("ERRORCHECK", "QUEUE IS EMPTY");
         }
         return mLastFrame;
     }
@@ -143,12 +151,23 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
             // TODO Auto-generated method stub
+        	
+        	if (camera.getParameters().getPreviewFormat() == ImageFormat.NV21) {// NV21
+        		Log.d("ERRORCHECK", "NV21");
+                // Convert to JPG
+                YuvImage yuvimage = new YuvImage(data,
+                        ImageFormat.NV21, width, height, null);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                yuvimage.compressToJpeg(new Rect(0, 0, width, height), 50, baos);
+                byte[] jdata = baos.toByteArray();
+            }
+        	
         	synchronized (mQueue) {
     			if (mQueue.size() == MAX_BUFFER) {
     				mQueue.poll();
     			}
     			mQueue.add(data);
-    			Log.d("ERRORCHECK", "queue" + mQueue.size());
+    			//Log.d("ERRORCHECK", "queue" + mQueue.size());
         	}
         }
     };

@@ -91,7 +91,7 @@ public class BufferManager extends Thread {
     				bufferedImage.setRGB(0, 0, mWidth, mHeight, rgbArray, 0, mWidth);
     				
                     mListener.onDirty(bufferedImage);
-                    System.out.println("time cost = " + (System.currentTimeMillis() - t));
+//                    System.out.println("time cost = " + (System.currentTimeMillis() - t));
     			}
     			
     		}

@@ -40,9 +40,7 @@ public class SocketClient extends Thread {
 	private DataListener mDataListener;
 	private BufferManager mBufferManager;
 	private static final String TAG = "socket";
-	//private String mIP = "10.0.0.8";
-	private String mIP = "128.237.223.104";
-	//private String mIP = "128.237.218.26";
+	private String mIP = MainActivity.mIP;
 	int width;
 	int height;
 	private int mPort = 8888;

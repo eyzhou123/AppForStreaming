@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
 import android.util.Log;
 
 import com.google.gson.JsonElement;
@@ -16,7 +17,7 @@ public class SocketClientAndroid extends Thread {
 	private Socket mSocket;
 	private CameraPreview mCameraPreview;
 	private static final String TAG = "socket";
-	private String mIP = "128.237.223.104";
+	private String mIP = MainActivity.mIP;
 	private int mPort = 8880;
 	
 	public SocketClientAndroid(CameraPreview preview, String ip, int port) {
@@ -92,6 +93,8 @@ public class SocketClientAndroid extends Thread {
                         	while (CameraPreview.mQueue.size() == 0) {
                         		Thread.sleep(200);
                         	}
+                        	Log.d("Emily", "Length " + mCameraPreview.getImageBuffer().length);
+                        	
                             outputStream.write(mCameraPreview.getImageBuffer());
                             outputStream.flush();
                             if (Thread.currentThread().isInterrupted())

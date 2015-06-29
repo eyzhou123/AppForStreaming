@@ -26,7 +26,7 @@ public class ImageBuffer{
             }
             
             mTotalLength = 0;         
-            System.out.println("received file");
+//            System.out.println("received file");
         }
         
         return 0;

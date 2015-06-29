@@ -94,7 +94,6 @@ public class BufferManager extends Thread {
     			if (data != null && data.length != 0) {
     				long t = System.currentTimeMillis();
     				//Bitmap bufferedImage = null;
-    				Log.d("WORK DAMNIT", "data.length = " + data.length);
     				//int[] rgbArray = Utils.convertYUVtoRGB(data, mWidth, mHeight);
     				//int[] rgbArray = data;
     				////bufferedImage = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
@@ -112,7 +111,7 @@ public class BufferManager extends Thread {
     				Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, opt);
     				
                     mListener.onDirty(bitmap);
-                    System.out.println("time cost = " + (System.currentTimeMillis() - t));
+//                    System.out.println("time cost = " + (System.currentTimeMillis() - t));
     			}
     			
     		}

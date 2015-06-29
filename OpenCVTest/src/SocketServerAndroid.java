@@ -21,6 +21,8 @@ public class SocketServerAndroid extends Thread {
 	private ServerSocket mServer;
 	private DataListener mDataListener;
 	private BufferManager mBufferManager;
+	private int width;
+	private int height;
 
 	public SocketServerAndroid() {
 	    
@@ -76,9 +78,9 @@ public class SocketServerAndroid extends Thread {
 	                        element = obj.get("length");
 	                        int length = element.getAsInt();
 	                        element = obj.get("width");
-	                        int width = element.getAsInt();
+	                        width = element.getAsInt();
 	                        element = obj.get("height");
-	                        int height = element.getAsInt();
+	                        height = element.getAsInt();
 	                        
 	                        imageBuff = new byte[length];
                             mBufferManager = new BufferManager(length, width, height);
@@ -102,13 +104,13 @@ public class SocketServerAndroid extends Thread {
 	                    mBufferManager.fillBuffer(imageBuff, len);
 	                }
 				    
-//				    InputStream in = new ByteArrayInputStream(imageBuff);
-//					BufferedImage buffered = ImageIO.read(in);
+				    
+					
 				}
 				
-				if (mBufferManager != null) {
-					mBufferManager.close();
-				}
+//				if (mBufferManager != null) {
+//					mBufferManager.close();
+//				}
 			}
 
 		} catch (IOException e) {
