@@ -70,6 +70,11 @@ public class MainActivity extends Activity implements DataListener {
 	    
 	}
 
+	@Override
+	protected void onStart(){
+		super.onStart();
+	}
+	
 	private void paint() {
 		//Canvas tempCanvas = new Canvas();
 		
@@ -117,6 +122,18 @@ public class MainActivity extends Activity implements DataListener {
 		mCameraManager.onResume();
 		mPreview.setCamera(mCameraManager.getCamera());
 	}
+	
+	@Override
+	protected void onStop() {
+		Log.d("ERRORCHECK", "Closing android socket client");
+		if (CameraPreview.mCamera != null) {
+			CameraPreview.mCamera.stopPreview();
+			CameraPreview.mCamera.release();
+			CameraPreview.mCamera = null;
+	    }
+		closeSocketClient();
+	}
+	
 	
 	private void closeSocketClient() {
 		if (mThread == null)

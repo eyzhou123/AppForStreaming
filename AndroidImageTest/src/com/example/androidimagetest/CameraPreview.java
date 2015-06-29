@@ -23,7 +23,7 @@ import android.view.SurfaceView;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder mHolder;
-    private Camera mCamera;
+    public static Camera mCamera;
     private static final String TAG = "camera";
     private Size mPreviewSize;
     private byte[] mImageData;
@@ -33,6 +33,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private int mFrameLength;
     private int width = 320;
     private int height = 240;
+    private byte[] jdata;
 
     @SuppressWarnings("deprecation")
 	public CameraPreview(Context context, Camera camera) {
@@ -154,23 +155,21 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             // TODO Auto-generated method stub
         	
         	if (camera.getParameters().getPreviewFormat() == ImageFormat.NV21) {// NV21
-        		Log.d("ERRORCHECK", "NV21");
                 // Convert to JPG
                 YuvImage yuvimage = new YuvImage(data,
                         ImageFormat.NV21, width, height, null);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 yuvimage.compressToJpeg(new Rect(0, 0, width, height), 50, baos);
-                byte[] jdata = baos.toByteArray();
-                Log.d("ERRORCHECK", "jdata size = " + jdata.length);
-                Log.d("ERRORCHECK", "data size = " + data.length);
+                jdata = baos.toByteArray();
+//                Log.d("ERRORCHECK", "jdata size = " + jdata.length);
+//                Log.d("ERRORCHECK", "data size = " + data.length);
             }
         	
         	synchronized (mQueue) {
     			if (mQueue.size() == MAX_BUFFER) {
     				mQueue.poll();
     			}
-    			mQueue.add(data);
-    			//Log.d("ERRORCHECK", "queue" + mQueue.size());
+    			mQueue.add(jdata);
         	}
         }
     };

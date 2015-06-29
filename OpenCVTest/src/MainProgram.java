@@ -110,7 +110,6 @@ public class MainProgram extends JPanel implements DataListener {
         	}	
         	mQueue.add(bufferedImage);
         }
-   
         repaint();
     }
 	

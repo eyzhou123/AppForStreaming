@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
 
@@ -54,6 +55,7 @@ public class SocketServerAndroid extends Thread {
 				
 				byte[] buff = new byte[256];
 				byte[] imageBuff = null;
+				byte[] length_buff = new byte[4];
 				int len = 0;
 				String msg = null;
 				// read msg
@@ -99,13 +101,45 @@ public class SocketServerAndroid extends Thread {
 		            outputStream.write(jsonObj.toString().getBytes());
 		            outputStream.flush();
 		            
-		            // read image data
-				    while ((len = inputStream.read(imageBuff)) != -1) {
-	                    mBufferManager.fillBuffer(imageBuff, len);
-	                }
-				    
-				    
-					
+//		            // read image data
+//				    while ((len = inputStream.read(imageBuff)) != -1) {
+//	                    mBufferManager.fillBuffer(imageBuff, len);
+//	                }
+		            
+		            while(true) {
+			            int length_bytes_read = 0;
+						int just_read;
+						while (length_bytes_read < 4) {
+							just_read = inputStream.read(length_buff, length_bytes_read, 4 - length_bytes_read);
+							length_bytes_read += just_read;
+						}
+						int updated_length = bytesToInt(length_buff);
+						//Log.d("ERRORCHECK", "read new length as: " + updated_length);
+						imageBuff = new byte[updated_length];
+						//mBufferManager = new BufferManager(updated_length, width, height);
+						//mBufferManager.setOnDataListener(mDataListener);
+						
+						// read image
+						int image_bytes_read = 0;
+						while (image_bytes_read < updated_length) {
+							just_read = inputStream.read(imageBuff, image_bytes_read, updated_length - image_bytes_read);
+							image_bytes_read += just_read;
+						}
+					    ByteArrayInputStream stream = new ByteArrayInputStream(imageBuff);
+	    			    BufferedImage bufferedImage = null;
+	    			    try {
+							bufferedImage = ImageIO.read(stream);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+	    				
+	    			    if (bufferedImage == null) {
+	    			    	System.out.println("Buffered image is NULL");
+	    			    }
+	                    mDataListener.onDirty(bufferedImage);
+	//					mBufferManager.fillBuffer(imageBuff, updated_length);
+		            }
 				}
 				
 //				if (mBufferManager != null) {
@@ -147,5 +181,9 @@ public class SocketServerAndroid extends Thread {
 
 	public void setOnDataListener(DataListener listener) {
 		mDataListener = listener;
+	}
+	
+	public int bytesToInt(byte[] int_bytes) throws IOException {
+		return ByteBuffer.wrap(int_bytes).getInt();
 	}
 }

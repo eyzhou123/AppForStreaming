@@ -1,7 +1,11 @@
 
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.LinkedList;
+
+import javax.imageio.ImageIO;
 
 
 public class BufferManager extends Thread {
@@ -85,12 +89,25 @@ public class BufferManager extends Thread {
     			
     			if (data != null) {
     				long t = System.currentTimeMillis();
-    				BufferedImage bufferedImage = null;
-    				int[] rgbArray = Utils.convertYUVtoRGB(data, mWidth, mHeight);
-    				bufferedImage = new BufferedImage(mWidth, mHeight, BufferedImage.TYPE_USHORT_565_RGB);
-    				bufferedImage.setRGB(0, 0, mWidth, mHeight, rgbArray, 0, mWidth);
+//    				BufferedImage bufferedImage = 
+//    				int[] rgbArray = Utils.convertYUVtoRGB(data, mWidth, mHeight);
+//    				bufferedImage = new BufferedImage(mWidth, mHeight, BufferedImage.TYPE_USHORT_565_RGB);
+//    				bufferedImage.setRGB(0, 0, mWidth, mHeight, rgbArray, 0, mWidth);
     				
+    				ByteArrayInputStream stream = new ByteArrayInputStream(data);
+    			    BufferedImage bufferedImage = null;
+    			    try {
+						bufferedImage = ImageIO.read(stream);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    				
+    			    if (bufferedImage == null) {
+    			    	System.out.println("Buffered image is NULL");
+    			    }
                     mListener.onDirty(bufferedImage);
+                   
 //                    System.out.println("time cost = " + (System.currentTimeMillis() - t));
     			}
     			

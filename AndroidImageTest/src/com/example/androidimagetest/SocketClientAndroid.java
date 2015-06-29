@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 import android.util.Log;
 
@@ -93,10 +94,13 @@ public class SocketClientAndroid extends Thread {
                         	while (CameraPreview.mQueue.size() == 0) {
                         		Thread.sleep(200);
                         	}
-                        	Log.d("Emily", "Length " + mCameraPreview.getImageBuffer().length);
+//                        	Log.d("ERRORCHECK", "sending cam_data");
+                        	byte[] cam_data = mCameraPreview.getImageBuffer();
                         	
-                            outputStream.write(mCameraPreview.getImageBuffer());
+                        	outputStream.write(intToBytes(cam_data.length));
+                            outputStream.write(cam_data);
                             outputStream.flush();
+//                            Log.d("ERRORCHECK", "SENT");
                             if (Thread.currentThread().isInterrupted())
                                 break;
                         }
@@ -116,15 +120,17 @@ public class SocketClientAndroid extends Thread {
 //			e.printStackTrace();
 			Log.e(TAG, e.toString());
 		} 
-		finally {
-			try {
-				mSocket.close();
-				mSocket = null;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		
+//		finally {
+//			try {
+//				Log.d("ERRORCHECK", "CLOSED");
+//				mSocket.close();
+//				mSocket = null;
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 	}
 	
 	public void close() {
@@ -137,4 +143,9 @@ public class SocketClientAndroid extends Thread {
 			}
 		}
 	}
+	
+	public static byte[] intToBytes(int yourInt) throws IOException {
+		return ByteBuffer.allocate(4).putInt(yourInt).array();
+	}
+	
 }
