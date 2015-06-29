@@ -39,9 +39,16 @@ public class SocketServerAndroid extends Thread {
 		BufferedOutputStream outputStream = null;
 		Socket socket = null;
 		ByteArrayOutputStream byteArray = null;
+		
+		
 		try {
 			mServer = new ServerSocket(8880);
-			while (!Thread.currentThread().isInterrupted()) {
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		while (SocketServer.server_is_running) {
+			try {	
 				if (byteArray != null)
 					byteArray.reset();
 				else
@@ -52,7 +59,7 @@ public class SocketServerAndroid extends Thread {
 				
 				inputStream = new BufferedInputStream(socket.getInputStream());
 				outputStream = new BufferedOutputStream(socket.getOutputStream());
-				
+			
 				byte[] buff = new byte[256];
 				byte[] imageBuff = null;
 				byte[] length_buff = new byte[4];
@@ -145,37 +152,37 @@ public class SocketServerAndroid extends Thread {
 //				if (mBufferManager != null) {
 //					mBufferManager.close();
 //				}
-			}
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			try {
-				if (outputStream != null) {
-					outputStream.close();
-					outputStream = null;
-				}
-				
-				if (inputStream != null) {
-					inputStream.close();
-					inputStream = null;
-				}
-
-				if (socket != null) {
-					socket.close();
-	                socket = null;
-				}
-				
-				if (byteArray != null) {
-					byteArray.close();
-				}
-				
-			} catch (IOException e) {
-
-			}
+//		} finally {
+//			try {
+//				if (outputStream != null) {
+//					outputStream.close();
+//					outputStream = null;
+//				}
+//				
+//				if (inputStream != null) {
+//					inputStream.close();
+//					inputStream = null;
+//				}
+//
+//				if (socket != null) {
+//					socket.close();
+//	                socket = null;
+//				}
+//				
+//				if (byteArray != null) {
+//					byteArray.close();
+//				}
+//				
+//			} catch (IOException e) {
+//
+//			}
 
 		}
+	}
 
 	}
 

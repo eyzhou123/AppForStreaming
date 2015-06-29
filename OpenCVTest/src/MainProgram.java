@@ -2,6 +2,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -132,8 +134,16 @@ public class MainProgram extends JPanel implements DataListener {
         		mLastFrame = mQueue.poll();
         	}	
         }
+      
+        double rotationRequired = Math.toRadians(270);
+        double locationX = mLastFrame.getWidth() / 2;
+        double locationY = mLastFrame.getHeight() / 2;
+        AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
+        
         if (mLastFrame != null) {
-        	g.drawImage(mLastFrame, 0, 0, null);
+        	g.drawImage(op.filter(mLastFrame, null), 0, 0, null);
         }
         else if (mImage != null) {
             g.drawImage(mImage, 0, 0, null);

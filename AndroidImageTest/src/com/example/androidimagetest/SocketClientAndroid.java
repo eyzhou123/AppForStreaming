@@ -21,20 +21,20 @@ public class SocketClientAndroid extends Thread {
 	private String mIP = MainActivity.mIP;
 	private int mPort = 8880;
 	
-	public SocketClientAndroid(CameraPreview preview, String ip, int port) {
-	    mCameraPreview = preview;
-	    if (mCameraPreview == null) {
-	    	Log.d("ERRORCHECK", "mCamera is NULL");
-	    }
-	    mIP = ip;
-	    mPort = port;
-		start();
-	}
-	
-	public SocketClientAndroid(CameraPreview preview) {
-	    mCameraPreview = preview;
-		start();
-	}
+//	public SocketClientAndroid(CameraPreview preview, String ip, int port) {
+//	    mCameraPreview = preview;
+//	    if (mCameraPreview == null) {
+//	    	Log.d("ERRORCHECK", "mCamera is NULL");
+//	    }
+//	    mIP = ip;
+//	    mPort = port;
+//		start();
+//	}
+//	
+//	public SocketClientAndroid(CameraPreview preview) {
+//	    mCameraPreview = preview;
+//		start();
+//	}
 	
 	@Override
 	public void run() {
@@ -47,6 +47,8 @@ public class SocketClientAndroid extends Thread {
 			
 			BufferedOutputStream outputStream = new BufferedOutputStream(mSocket.getOutputStream());
 			BufferedInputStream inputStream = new BufferedInputStream(mSocket.getInputStream());
+			
+			mCameraPreview = MainActivity.mPreview;
 			
 			JsonObject jsonObj = new JsonObject();
             jsonObj.addProperty("type", "data");
