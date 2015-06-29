@@ -70,11 +70,18 @@ public class MainActivity extends Activity implements DataListener {
 	    
 	}
 
-	@Override
-	protected void onStart(){
-		super.onStart();
-	}
-	
+//	@Override
+//	protected void onStart(){
+//		super.onStart();
+//		if (mIP == null) {
+//	  		  mThread = new SocketClientAndroid(mPreview);
+//  	  	}
+//  	  	else {
+//  	  		mThread = new SocketClientAndroid(mPreview, mIP, 8880);
+//  	  	}
+//	}
+
+	// This paints the server's webcam stream in an android imageview
 	private void paint() {
 		//Canvas tempCanvas = new Canvas();
 		
@@ -123,16 +130,18 @@ public class MainActivity extends Activity implements DataListener {
 		mPreview.setCamera(mCameraManager.getCamera());
 	}
 	
-	@Override
-	protected void onStop() {
-		Log.d("ERRORCHECK", "Closing android socket client");
-		if (CameraPreview.mCamera != null) {
-			CameraPreview.mCamera.stopPreview();
-			CameraPreview.mCamera.release();
-			CameraPreview.mCamera = null;
-	    }
-		closeSocketClient();
-	}
+//	@Override
+//	protected void onStop() {
+//		super.onStop();
+//		Log.d("ERRORCHECK", "Closing android socket client");
+////		if (CameraPreview.mCamera != null) {
+////			CameraPreview.mCamera.stopPreview();
+////			CameraPreview.mCamera.release();
+////			CameraPreview.mCamera = null;
+////	    }
+//		mThread.close();
+//		mThread = null;
+//	}
 	
 	
 	private void closeSocketClient() {
