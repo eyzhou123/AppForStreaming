@@ -57,6 +57,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         params.setPreviewSize(width, height);
 //        params.setPreviewSize(240, 320);
 //        mCamera.setDisplayOrientation(90);
+        params.setPreviewFormat(ImageFormat.NV21);
         mCamera.setParameters(params);
         
         mPreviewSize = mCamera.getParameters().getPreviewSize();
@@ -94,7 +95,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
         try {
         	
-            mCamera.setPreviewCallbackWithBuffer(mPreviewCallback);
+            mCamera.setPreviewCallback(mPreviewCallback);
             mCamera.setPreviewDisplay(mHolder);
             mCamera.startPreview();
 
@@ -160,6 +161,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 yuvimage.compressToJpeg(new Rect(0, 0, width, height), 50, baos);
                 byte[] jdata = baos.toByteArray();
+                Log.d("ERRORCHECK", "jdata size = " + jdata.length);
+                Log.d("ERRORCHECK", "data size = " + data.length);
             }
         	
         	synchronized (mQueue) {
