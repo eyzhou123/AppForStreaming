@@ -375,10 +375,10 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
         // Woz mode
         stream_button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-            	if (stream_button_clicked) {
-            		layoutMain.removeView(imageView);
-            		layoutMain.removeView(layoutLeft);
-            	}
+//            	if (stream_button_clicked) {
+//            		layoutMain.removeView(imageView);
+//            		layoutMain.removeView(layoutLeft);
+//            	}
                 if (assistant_button_clicked) {
                     assistant_button_clicked = false;
                     assistant_button.setBackgroundResource(R.drawable.assistant_button);
@@ -400,21 +400,22 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
                   
                LinearLayout.LayoutParams image_params = new LinearLayout.LayoutParams(
             		   LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                
-        	   stream_button_clicked = true;
-        	   layoutMain.addView(imageView, image_params);
-        	   handler = new Handler();
-         	   openSocketClient();
-         	   socketclient.start();
-         	   openAudioClient();
-         	   audioclient.start();
-         	   Log.d("ERRORCHECK", "started clients");
-               layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, height - small_assistant_height);
-
-               mThread = new SocketClientAndroid();
-       		   mThread.start();
-       		   FrameLayout cam_view = (FrameLayout) findViewById(R.id.camera_preview);
-//       		   cam_view.setVisibility(View.GONE);
+               if (!stream_button_clicked) {
+	        	   stream_button_clicked = true;
+	        	   layoutMain.addView(imageView, image_params);
+	        	   handler = new Handler();
+	         	   openSocketClient();
+	         	   socketclient.start();
+	         	   openAudioClient();
+	         	   audioclient.start();
+	         	   Log.d("ERRORCHECK", "started clients");
+	               layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, height - small_assistant_height);
+	
+	               mThread = new SocketClientAndroid();
+	       		   mThread.start();
+	       		   FrameLayout cam_view = (FrameLayout) findViewById(R.id.camera_preview);
+	//       		   cam_view.setVisibility(View.GONE);
+               }
             }
         });
 
