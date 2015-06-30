@@ -86,8 +86,6 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
     private boolean mIsOn = true;
     private SocketClientAndroid mThread;
     private Button mButton;
-//    public static String mIP = "128.237.223.104";
-    public static String mIP = "10.0.0.8";
     private int mPort = 8880;
     public static boolean android_is_streaming = true;
 	
@@ -95,8 +93,8 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
 	private boolean on_start_page = true;
 	
 	//private static String server_ip = "128.237.221.118";
-	public static String server_ip = "10.0.0.8";
-//	public static String server_ip = "128.237.223.104";
+//	public static String server_ip = "10.0.0.8";
+	public static String server_ip = "128.237.223.104";
 	
     static Context context;
     static Button news_button;
@@ -412,7 +410,7 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
          	   audioclient.start();
          	   Log.d("ERRORCHECK", "started clients");
                layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, height - small_assistant_height);
-               
+
                mThread = new SocketClientAndroid();
        		   mThread.start();
        		   FrameLayout cam_view = (FrameLayout) findViewById(R.id.camera_preview);
@@ -487,6 +485,7 @@ vhmsg.send("vrExpress", vrExpress);
     private void openSocketClient() {
     	socketclient = new SocketClient();
         socketclient.setOnDataListener(this);
+        
     }
     
     private void openAudioClient() {
