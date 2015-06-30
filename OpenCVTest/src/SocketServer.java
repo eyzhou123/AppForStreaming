@@ -1,4 +1,5 @@
 
+import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.BufferedInputStream;
@@ -294,8 +295,9 @@ public class SocketServer extends Thread {
 		} catch (IOException e) {
 			// client side closed
 			client_closed = true;
+			SocketServerAndroid.android_is_streaming = false;
 			GUI.make_video_v();
-			System.out.println("exception");
+			System.out.println("SocketServer exception");
 			e.printStackTrace();
 
 		} 

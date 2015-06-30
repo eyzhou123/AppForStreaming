@@ -1,6 +1,13 @@
 package com.yahoo.inmind.reader;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -69,14 +76,27 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
 	private boolean news_button_clicked = false;
 	private boolean news_mode_clicked = false;
 	private boolean stream_button_clicked = false;
-	private boolean just_clicked_woz = false;
+	private static String msg = null;
+	private static String timestamp = null;
+	private static Date date;
+	static SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_h.mm.ssa");
+	
+	public static CameraPreview mPreview;
+    public static CameraManager mCameraManager;
+    private boolean mIsOn = true;
+    private SocketClientAndroid mThread;
+    private Button mButton;
+//    public static String mIP = "128.237.223.104";
+    public static String mIP = "10.0.0.8";
+    private int mPort = 8880;
+    public static boolean android_is_streaming = true;
 	
 	AnimationDrawable frameAnimation;
 	private boolean on_start_page = true;
 	
 	//private static String server_ip = "128.237.221.118";
-	//public static String server_ip = "128.237.218.26";
-	public static String server_ip = "128.237.223.104";
+	public static String server_ip = "10.0.0.8";
+//	public static String server_ip = "128.237.223.104";
 	
     static Context context;
     static Button news_button;
@@ -84,6 +104,7 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
     static Button news_mode_button;
     static Button stream_button;
     private EditText newIP;
+    public static String path = "/Users/eyzhou/Desktop/";
     
     private LinkedList<Bitmap> mQueue = new LinkedList<Bitmap>();
 	private static final int MAX_BUFFER = 15;
@@ -121,6 +142,10 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
         final int news_mode_button_width = width/3 - button_margin;
         final int button_panel_height = height/16;
         
+        mCameraManager = new CameraManager(this);
+	    mPreview = new CameraPreview(this, mCameraManager.getCamera());
+	    FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+        preview.addView(mPreview);
         
      // EZ: Created an "outside" layout that contains all the other layouts, so that
         // it can also have a sliding drawer
@@ -139,7 +164,6 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
         final LinearLayout button_panel = new LinearLayout(this);
         button_panel.setOrientation(LinearLayout.HORIZONTAL);
         button_panel.setBackgroundColor(Color.parseColor("#000000"));
-        //layoutMain.addView(button_panel, LinearLayout.LayoutParams.MATCH_PARENT, button_panel_height);
 
         final LayoutInflater inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -185,7 +209,6 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
         stream_button.setTextSize(12);
         stream_button.setTextColor(Color.parseColor("#000000"));
         stream_button.setBackgroundColor(Color.parseColor("#0ABEF5"));
-        //stream_button.setBackgroundResource(R.drawable.news_mode_button);
         LinearLayout.LayoutParams stream_button_params = new LinearLayout.LayoutParams(
                 news_mode_button_width, button_panel_height);
         stream_button_params.setMargins(10, 5, 10, 5);
@@ -205,7 +228,6 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
         LinearLayout.LayoutParams image_params = new LinearLayout.LayoutParams(
         	LinearLayout.LayoutParams.FILL_PARENT, 400);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        //layoutMain.addView(imageView, image_params);
         
         
         
@@ -239,7 +261,6 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
         RelativeLayout.LayoutParams mic_button_params = new RelativeLayout.LayoutParams(220, 150);
         mic_button.setLayoutParams(mic_button_params);
         mic_button_params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        //mic_button_params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         layoutRel.addView(mic_button, mic_button_params);
 
 
@@ -251,10 +272,8 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
                 assistant_button.setBackgroundResource(R.drawable.assistant_button_pressed);
                 if (stream_button_clicked) {
                 	stream_button_clicked = false;
-//                	just_clicked_woz = false;
                 	closeSocketClient();
                 	layoutMain.removeView(imageView);
-//                	imageView.setVisibility(View.GONE);
                 	layoutMain.removeView(layoutLeft);
                 	layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, news_height );
                     layoutMain.addView(layoutRight,DrawerLayout.LayoutParams.MATCH_PARENT, assistant_height);
@@ -287,10 +306,8 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
                 news_button.setBackgroundResource(R.drawable.news_button_pressed);
                 if (stream_button_clicked) {
                 	stream_button_clicked = false;
-//                	just_clicked_woz = false;
                 	closeSocketClient();
                 	layoutMain.removeView(imageView);
-//                	imageView.setVisibility(View.GONE);
                 	layoutMain.removeView(layoutLeft);
                 	layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, news_height );
                     layoutMain.addView(layoutRight,DrawerLayout.LayoutParams.MATCH_PARENT, assistant_height);
@@ -323,12 +340,9 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
                 news_mode_clicked = true;
                 news_mode_button.setBackgroundResource(R.drawable.news_mode_button_pressed);
                 if (stream_button_clicked) {
-//                	just_clicked_woz = false;
-                	
     				stream_button_clicked = false;
                 	closeSocketClient();
                 	layoutMain.removeView(imageView);
-//                	imageView.setVisibility(View.GONE);
                 	layoutMain.removeView(layoutLeft);
                 	layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, news_height );
                     layoutMain.addView(layoutRight,DrawerLayout.LayoutParams.MATCH_PARENT, assistant_height);
@@ -360,12 +374,9 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
             }
         });
 
-        
-        
+        // Woz mode
         stream_button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-//            	just_clicked_woz = true;
-                //news_mode_button.setBackgroundResource(R.drawable.news_mode_button_pressed);
             	if (stream_button_clicked) {
             		layoutMain.removeView(imageView);
             		layoutMain.removeView(layoutLeft);
@@ -374,7 +385,6 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
                     assistant_button_clicked = false;
                     assistant_button.setBackgroundResource(R.drawable.assistant_button);
                     layoutMain.removeView(layoutRight);
-                   // layoutMain.addView(layoutRight,DrawerLayout.LayoutParams.MATCH_PARENT, assistant_height );
                     layoutLeft.setVisibility(View.VISIBLE);
                     layoutMain.removeView(layoutLeft);
                 }
@@ -382,40 +392,31 @@ public class ReaderMainActivity extends I13NActivity implements DataListener {
                     news_button_clicked = false;
                     news_button.setBackgroundResource(R.drawable.news_button);
                     layoutMain.removeView(layoutLeft);
-                   // layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, news_height );
-                   // layoutMain.addView(layoutRight,DrawerLayout.LayoutParams.MATCH_PARENT, assistant_height);
                 }
                 if (news_mode_clicked) {
                     news_mode_clicked = false;
                     news_mode_button.setBackgroundResource(R.drawable.news_mode_button);
                     layoutMain.removeView(layoutRight);
                     layoutMain.removeView(layoutLeft);
-//                    layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, news_height );
-//                    layoutMain.addView(layoutRight,DrawerLayout.LayoutParams.MATCH_PARENT, assistant_height);
                 }
-                  //layoutMain.removeView(imageView);
-            	  //layoutMain.addView(imageView);
-            	  //Log.d("ERRORCHECK", "added image view");
                   
-                //imageView.setVisibility(View.VISIBLE);
-                LinearLayout.LayoutParams image_params = new LinearLayout.LayoutParams(
-                		LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+               LinearLayout.LayoutParams image_params = new LinearLayout.LayoutParams(
+            		   LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 
-//               if (!stream_button_clicked) {
-            	   stream_button_clicked = true;
-            	   layoutMain.addView(imageView, image_params);
-            	   handler = new Handler();
-             	   openSocketClient();
-             	   socketclient.start();
-             	   openAudioClient();
-             	   audioclient.start();
-             	   Log.d("ERRORCHECK", "started clients");
-//               }
-//               openAudioClient();
-//         	   audioclient.start();
-//               imageView.setVisibility(View.VISIBLE);
+        	   stream_button_clicked = true;
+        	   layoutMain.addView(imageView, image_params);
+        	   handler = new Handler();
+         	   openSocketClient();
+         	   socketclient.start();
+         	   openAudioClient();
+         	   audioclient.start();
+         	   Log.d("ERRORCHECK", "started clients");
                layoutMain.addView(layoutLeft,DrawerLayout.LayoutParams.MATCH_PARENT, height - small_assistant_height);
-
+               
+               mThread = new SocketClientAndroid();
+       		   mThread.start();
+       		   FrameLayout cam_view = (FrameLayout) findViewById(R.id.camera_preview);
+//       		   cam_view.setVisibility(View.GONE);
             }
         });
 
@@ -493,22 +494,29 @@ vhmsg.send("vrExpress", vrExpress);
     }
 
     private void closeSocketClient() {
-//    	AudioClient.audioTrack.flush();
-//    	AudioClient.audioTrack.stop(); 
-//	    AudioClient.audioTrack.release();
-    	
 	    audioclient.close();
 	    socketclient.close();
-//	    audioclient = null;
-//	    socketclient = null;
-//	    audioclient = null;
-//	    socketclient = null;
-		
 	}
     
+
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d("ERRORCHECK", "Closing android socket client");
+//		if (CameraPreview.mCamera != null) {
+//			CameraPreview.mCamera.stopPreview();
+//			CameraPreview.mCamera.release();
+//			CameraPreview.mCamera = null;
+//	    }
+		mThread.close();
+		mThread = null;
+	}
+    
+    // The following two functions are used for the woz view. 
+    // They update the imageview as images are grabbed on the server
+    // side from the webcam
     private void paint() {
-		//Canvas tempCanvas = new Canvas();
-		
 	    //Draw the image bitmap into the canvas
 	    //tempCanvas.drawBitmap(mLastFrame, 0, 0, null);
 		synchronized (mQueue) {
@@ -526,7 +534,6 @@ vhmsg.send("vrExpress", vrExpress);
 			}
 	    	
 	    });
-	    //Attach the canvas to the ImageView
 	}
     
     @Override
@@ -542,35 +549,51 @@ vhmsg.send("vrExpress", vrExpress);
 	}
     
     
- // Handle switching views from the slide out drawer
-    // NOTE: drawer only appears in the news window, so once you switch to assistant view, you
-    // cannot pull out the drawer
+ // Handle switching views from the slide out drawer (called from DrawerManager.java)
     public static void clicked_news_view() {
         Toast.makeText(context, "NEWS VIEW",
                 Toast.LENGTH_SHORT).show();
+        date = new Date();
+		timestamp = sdf.format(date);
+		msg = "Pressed NEWS VIEW at " + timestamp;
+        Log.d("USER DATA", msg);
+        
         news_button.performClick();
     }
 
     public static void clicked_assistant_view() {
         Toast.makeText(context, "ASSISTANT VIEW",
                 Toast.LENGTH_SHORT).show();
+        date = new Date();
+		timestamp = sdf.format(date);
+		msg = "Pressed ASSISTANT VIEW at " + timestamp;
+        Log.d("USER DATA", msg);
+        
         assistant_button.performClick();
     }
 
     public static void clicked_both_view() {
         Toast.makeText(context, "BOTH VIEW",
                 Toast.LENGTH_SHORT).show();
+        date = new Date();
+		timestamp = sdf.format(date);
+		msg = "Pressed BOTH VIEW at " + timestamp;
+        Log.d("USER DATA", msg);
+        
         news_mode_button.performClick();
     }
     
-    public static void camera_test() {
-        Toast.makeText(context, "CAMERA TEST",
+    public static void woz_view() {
+        Toast.makeText(context, "WOZ VIEW",
                 Toast.LENGTH_SHORT).show();
-        // TRY CAMERA STUFF HERE
+        date = new Date();
+		timestamp = sdf.format(date);
+		msg = "Pressed WOZ VIEW at " + timestamp;
+        Log.d("USER DATA", msg);
+        
         stream_button.performClick();
     }
-
-   
+    
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -677,6 +700,8 @@ vhmsg.send("vrExpress", vrExpress);
 	protected void onResume() {
 		super.onResume();
 		invalidateOptionsMenu();
+		mCameraManager.onResume();
+		mPreview.setCamera(mCameraManager.getCamera());
 	}
 
 

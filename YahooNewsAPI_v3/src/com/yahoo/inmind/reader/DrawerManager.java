@@ -282,7 +282,7 @@ public class DrawerManager
         }
         
         if (item.name.equals(mAct.getString(R.string.woz_view))) {
-            ReaderMainActivity.camera_test();
+            ReaderMainActivity.woz_view();
             item.idx = 0;
             mAct.setCurrentFrag(mItems.get(0).frag);
             showDrawerSelectionAndClose(0);

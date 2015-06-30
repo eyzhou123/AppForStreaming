@@ -118,9 +118,13 @@ public class SocketClient extends Thread {
 					//read image buffer length
 					int length_bytes_read = 0;
 					int just_read;
-					while (length_bytes_read < 4) {
-						just_read = inputStream.read(length_buff, length_bytes_read, 4 - length_bytes_read);
-						length_bytes_read += just_read;
+					try {
+						while (length_bytes_read < 4) {
+							just_read = inputStream.read(length_buff, length_bytes_read, 4 - length_bytes_read);
+							length_bytes_read += just_read;
+						}
+					} catch (IOException e) {
+						break;
 					}
 					int updated_length = bytesToInt(length_buff);
 					//Log.d("ERRORCHECK", "read new length as: " + updated_length);
@@ -159,15 +163,17 @@ public class SocketClient extends Thread {
 //			e.printStackTrace();
 			Log.e(TAG, e.toString());
 		} 
-		finally {
-			try {
-				mSocket.close();
-				mSocket = null;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		finally {
+//			try {
+//				mSocket.close();
+//				mSocket = null;
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+		Log.d("ERRORCHECK", "finishing android socket client");
+		return;
 	}
 	
 	public int bytesToInt(byte[] int_bytes) throws IOException {

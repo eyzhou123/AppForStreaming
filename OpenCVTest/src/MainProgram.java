@@ -42,8 +42,6 @@ public class MainProgram extends JPanel implements DataListener {
 		server.start();
 		audio_socket.start();
 
-////
-     
 		
 		JFrame f = new JFrame("Monitor");
         
@@ -57,7 +55,7 @@ public class MainProgram extends JPanel implements DataListener {
         f.add(new MainProgram());
         f.pack();
         f.setVisible(true);
-////
+
 		
 		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -135,14 +133,13 @@ public class MainProgram extends JPanel implements DataListener {
         	}	
         }
       
-        double rotationRequired = Math.toRadians(270);
-        double locationX = mLastFrame.getWidth() / 2;
-        double locationY = mLastFrame.getHeight() / 2;
-        AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
-        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-
-        
         if (mLastFrame != null) {
+        	double rotationRequired = Math.toRadians(270);
+            double locationX = mLastFrame.getWidth() / 2;
+            double locationY = mLastFrame.getHeight() / 2;
+            AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+            AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
         	g.drawImage(op.filter(mLastFrame, null), 0, 0, null);
         }
         else if (mImage != null) {

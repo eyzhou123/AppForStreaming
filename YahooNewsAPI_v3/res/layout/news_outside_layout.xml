@@ -41,6 +41,12 @@
             android:id="@+id/news_layout_rel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        
+        <FrameLayout
+	        android:id="@+id/camera_preview"
+	        android:layout_width="1dp"
+	        android:layout_height="1dp" 
+	        android:visibility="visible"/>
 
     </FrameLayout>
 

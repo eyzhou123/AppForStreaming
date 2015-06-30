@@ -24,6 +24,7 @@ public class SocketServerAndroid extends Thread {
 	private BufferManager mBufferManager;
 	private int width;
 	private int height;
+	public static boolean android_is_streaming = true;
 
 	public SocketServerAndroid() {
 	    
@@ -60,6 +61,7 @@ public class SocketServerAndroid extends Thread {
 				inputStream = new BufferedInputStream(socket.getInputStream());
 				outputStream = new BufferedOutputStream(socket.getOutputStream());
 			
+				int just_read = 0;
 				byte[] buff = new byte[256];
 				byte[] imageBuff = null;
 				byte[] length_buff = new byte[4];
@@ -115,10 +117,16 @@ public class SocketServerAndroid extends Thread {
 		            
 		            while(true) {
 			            int length_bytes_read = 0;
-						int just_read;
+						
 						while (length_bytes_read < 4) {
 							just_read = inputStream.read(length_buff, length_bytes_read, 4 - length_bytes_read);
+							if (just_read < 0) {
+								break;
+							}
 							length_bytes_read += just_read;
+						}
+						if (just_read < 0) {
+							break;
 						}
 						int updated_length = bytesToInt(length_buff);
 						//Log.d("ERRORCHECK", "read new length as: " + updated_length);
@@ -130,7 +138,13 @@ public class SocketServerAndroid extends Thread {
 						int image_bytes_read = 0;
 						while (image_bytes_read < updated_length) {
 							just_read = inputStream.read(imageBuff, image_bytes_read, updated_length - image_bytes_read);
+							if (just_read < 0) {
+								break;
+							}
 							image_bytes_read += just_read;
+						}
+						if (just_read < 0) {
+							break;
 						}
 					    ByteArrayInputStream stream = new ByteArrayInputStream(imageBuff);
 	    			    BufferedImage bufferedImage = null;
@@ -155,6 +169,8 @@ public class SocketServerAndroid extends Thread {
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			android_is_streaming = false;
+			
 			e.printStackTrace();
 //		} finally {
 //			try {
@@ -183,6 +199,8 @@ public class SocketServerAndroid extends Thread {
 
 		}
 	}
+		System.out.println("Exited android server");
+		return;
 
 	}
 

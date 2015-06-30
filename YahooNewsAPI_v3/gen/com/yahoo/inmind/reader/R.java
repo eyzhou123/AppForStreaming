@@ -96,31 +96,32 @@ public final class R {
     public static final class id {
         public static final int ARGB_4444=0x7f070004;
         public static final int ARGB_8888=0x7f070005;
-        public static final int Connect=0x7f070038;
-        public static final int Disconnect=0x7f070039;
-        public static final int PauseSim=0x7f070035;
+        public static final int Connect=0x7f070039;
+        public static final int Disconnect=0x7f07003a;
+        public static final int PauseSim=0x7f070036;
         public static final int RGB_565=0x7f070006;
-        public static final int RestartSim=0x7f070036;
+        public static final int RestartSim=0x7f070037;
         public static final int SbmButton=0x7f07001b;
         public static final int SbmText=0x7f07001c;
         public static final int ScrollView01=0x7f07000d;
-        public static final int ShowLog=0x7f070037;
-        public static final int StartSim=0x7f070034;
+        public static final int ShowLog=0x7f070038;
+        public static final int StartSim=0x7f070035;
         public static final int TextView02=0x7f07000f;
-        public static final int action_settings=0x7f07003b;
-        public static final int action_switchview=0x7f07003a;
-        public static final int action_toDesk=0x7f07003c;
-        public static final int action_toLap=0x7f07003d;
+        public static final int action_settings=0x7f07003c;
+        public static final int action_switchview=0x7f07003b;
+        public static final int action_toDesk=0x7f07003d;
+        public static final int action_toLap=0x7f07003e;
         public static final int anim_image=0x7f07000c;
         public static final int animation_layout=0x7f07000b;
         public static final int btnShareFb=0x7f070026;
         public static final int btnShareMore=0x7f070029;
         public static final int btnShareTumblr=0x7f070028;
         public static final int btnShareTwitter=0x7f070027;
-        public static final int button_rec=0x7f070032;
-        public static final int button_stop=0x7f070031;
+        public static final int button_rec=0x7f070033;
+        public static final int button_stop=0x7f070032;
+        public static final int camera_preview=0x7f07002f;
         public static final int drawer_icon=0x7f070011;
-        public static final int edit_ip=0x7f07003e;
+        public static final int edit_ip=0x7f07003f;
         public static final int enter_ip=0x7f070017;
         public static final int enter_ip_OK=0x7f070018;
         public static final int enter_ip_text=0x7f070016;
@@ -129,7 +130,7 @@ public final class R {
         public static final int frame=0x7f070007;
         public static final int framelayout=0x7f070013;
         public static final int horizontal=0x7f070002;
-        public static final int image_recording=0x7f070030;
+        public static final int image_recording=0x7f070031;
         public static final int img=0x7f070022;
         public static final int instructions_view=0x7f07000e;
         public static final int itemtext=0x7f070010;
@@ -140,7 +141,7 @@ public final class R {
         public static final int news_layout_frame=0x7f07002c;
         public static final int news_layout_main=0x7f07002d;
         public static final int news_layout_rel=0x7f07002e;
-        public static final int news_left_drawer=0x7f07002f;
+        public static final int news_left_drawer=0x7f070030;
         public static final int newslist=0x7f070015;
         public static final int pB1=0x7f070008;
         public static final int publisher=0x7f070020;
@@ -156,7 +157,7 @@ public final class R {
         public static final int title=0x7f07001e;
         public static final int vertical=0x7f070003;
         public static final int wv=0x7f070009;
-        public static final int yahoo_animation=0x7f070033;
+        public static final int yahoo_animation=0x7f070034;
     }
     public static final class layout {
         public static final int activity_browser=0x7f030000;
