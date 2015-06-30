@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -20,23 +21,16 @@ import javax.swing.JSplitPane;
 
 public class GUI extends JFrame {
 	public static JButton button;
-	public static JPanel panel1;
-	public static JPanel panel2;
+	public static JPanel button_panel;
+	public static JPanel android_panel;
+	public static JPanel webcam_panel;
 	
 	public GUI() {
 		super("Server");
 		setLayout(new FlowLayout());
 		
-//		setBackground(Color.gray);
-//		setSize(1000, 400);
-//
-//	    JPanel topPanel = new JPanel();
-//	    topPanel.setLayout( new BorderLayout() );
-//	    getContentPane().add( topPanel );
-//		
-//	    panel1 = new JPanel();
-//	    panel1.setSize(500, 400);
-//	    panel1.setLayout(new FlowLayout());
+		setBackground(Color.gray);
+
     	// This button should be used when closing the server, because it 
  		// ensures that a video is saved first. 
  		button = new JButton("Stop server");
@@ -48,17 +42,12 @@ public class GUI extends JFrame {
  		button.setFont(new Font("Arial", Font.PLAIN, 20));
  		HandlerClass handler = new HandlerClass();
  		button.addActionListener(handler);
-	    add(button);
+//	    button_panel.add(button);
 	    
-//	    panel2 = new JPanel();
-//	    panel2.setLayout(new FlowLayout());
-//	    panel2.add(new JButton( "Button 1" ));
+ 		add(button);
 	    
 	    
-//	    JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT );
-//	    topPanel.add(splitPane, BorderLayout.CENTER );
-//	    splitPane.setLeftComponent(panel1 );
-//	    splitPane.setRightComponent(panel2 );
+	    
 	    
 		
 		

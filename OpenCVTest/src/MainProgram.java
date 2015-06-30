@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
@@ -10,8 +11,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 public class MainProgram extends JPanel implements DataListener {
 	public static SocketServer server = new SocketServer();
@@ -33,8 +36,10 @@ public class MainProgram extends JPanel implements DataListener {
 	public static void main (String [] args) {
 		GUI gui = new GUI();
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gui.setSize(200, 200);
+		gui.setSize(600, 400);
 		gui.setVisible(true);
+		
+		
 		
 		//GrabberShow grabber = new GrabberShow();
 		
@@ -43,18 +48,21 @@ public class MainProgram extends JPanel implements DataListener {
 		audio_socket.start();
 
 		
-		JFrame f = new JFrame("Monitor");
+//		JFrame f = new JFrame("Monitor");
+//        
+//        f.addWindowListener(new WindowAdapter(){
+//                @Override
+//                public void windowClosing(WindowEvent e) {
+//                    System.exit(0);
+//                }
+//            });
+// 
+//        f.add(new MainProgram());
+//        f.pack();
+//        f.setVisible(true);
+        gui.add(new MainProgram());
+		
         
-        f.addWindowListener(new WindowAdapter(){
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    System.exit(0);
-                }
-            });
- 
-        f.add(new MainProgram());
-        f.pack();
-        f.setVisible(true);
 
 		
 		
